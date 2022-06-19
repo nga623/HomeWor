@@ -1,16 +1,13 @@
-﻿using Nolan.Infra.Repository.Entities.EfEnities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nolan.HK.Domain.Entities
+namespace Nolan.HK.Application.Contracts.Dtos 
 {
-	 
-	public class TimeSheetDetail : EfFullAuditEntity
-	{
-		 
+   public class TimeSheetDetailDto
+    {
 		public Guid Userid { get; set; }
 		public DateTime Date { get; set; }
 		public int TimesheetCount { get; set; }

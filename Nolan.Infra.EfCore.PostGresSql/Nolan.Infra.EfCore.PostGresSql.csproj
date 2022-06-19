@@ -5,12 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.15" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.5" />
+    <Compile Remove="Repositories\EfRepository.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Nolan.Domain.Shared\Nolan.Domain.Shared.csproj" />
+    <PackageReference Include="Autofac" Version="5.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.15" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Nolan.Infra.Repository\Nolan.Infra.Repository.csproj" />
   </ItemGroup>
 

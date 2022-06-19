@@ -4,4 +4,21 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>D:\thoughtwork\HomeWork\Nolan.HK.MVC\bin\Debug\net5.0</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Nolan.Application.Shared\Nolan.Application.Shared.csproj" />
+    <ProjectReference Include="..\Nolan.HK.Application.Contracts\Nolan.HK.Application.Contracts.csproj" />
+    <ProjectReference Include="..\Nolan.HK.Domain\Nolan.HK.Domain.csproj" />
+    <ProjectReference Include="..\Nolan.Infra.Mapper\Nolan.Infra.Mapper.csproj" />
+    <ProjectReference Include="..\Nolan.Infra.Repository\Nolan.Infra.Repository.csproj" />
+    <ProjectReference Include="..\Nolan.WebApi.Shared\Nolan.WebApi.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

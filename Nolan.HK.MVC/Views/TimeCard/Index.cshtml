@@ -1,0 +1,69 @@
+﻿@model List<Nolan.HK.Domain.Entities.TimeSheetDetail>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <input type="button" id="Create" value="Create" />
+</p>
+ 
+<form action="@Url.Action("Create")" method="post">
+    <p class="form-group">
+        <input type="submit" id="submit" value="submit" class="btn btn-primary" />
+    </p>
+    <table class="table" id="timecard">
+
+        <tbody>
+
+
+            <tr><td><input class='form-control' name="Userid" type='text' /></td><td><input name="Date" type='text' class='form-control' /> </td><td><a href='#'>Delete</a> </td></tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <input class="form-control" name="Userid" value=@Html.DisplayFor(modelItem => item.Userid) />
+                    </td>
+                    <td>
+                        <input class="form-control" name="Date" value=@Html.DisplayFor(modelItem => item.Date) />
+                    </td>
+                    <td>
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</form>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+
+    $(function () {
+        $("#Create").click(function () {
+            var tr = "<tr><td><input class='form-control' name='Userid'   type='text' /></td><td><input type='text' name='Date' class='form-control' /> </td><td><a href='#'>Delete</a> </td></tr>";
+            $("#timecard").append(tr);
+        });
+
+        $("#submit").click(function () {
+            var form = $(this).parents('form');
+            var result = [];
+            form.find('tbody tr').each(function () {
+                var thisItem = $(this);
+                result.push({
+                    Userid: thisItem.find("input:eq(0)").val(),
+                    Date: thisItem.find('input:eq(1)').val()
+                })
+            });
+            $.post(form.attr('action'), {
+                TimeSheetDetailDto: result, //直接提交json数组
+            }, function (data) {
+                alert(data);
+            });
+            return false;
+        });
+    })
+</script>

@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="5.1.0" />
+    <PackageReference Include="Autofac.Extras.DynamicProxy" Version="5.0.0" />
+    <PackageReference Include="FluentValidation" Version="11.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Nolan.Domain.Shared\Nolan.Domain.Shared.csproj" />
+    <ProjectReference Include="..\Nolan.Infra.Mapper\Nolan.Infra.Mapper.csproj" />
+    <ProjectReference Include="..\Nolan.WebApi.Shared\Nolan.WebApi.Shared.csproj" />
+  </ItemGroup>
+
+</Project>
