@@ -20,8 +20,4 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Nolan.HK.Domain\Nolan.HK.Domain.csproj" />
-  </ItemGroup>
-
 </Project>

@@ -11,6 +11,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Nolan.Domain.Shared\Nolan.Domain.Shared.csproj" />
+    <ProjectReference Include="..\Nolan.HK.Migrations\Nolan.HK.Migrations.csproj" />
+    <ProjectReference Include="..\Nolan.HK.Repository\Nolan.HK.Repository.csproj" />
     <ProjectReference Include="..\Nolan.Infra.Repository\Nolan.Infra.Repository.csproj" />
   </ItemGroup>
 
