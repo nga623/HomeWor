@@ -4,7 +4,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+/// <summary>
+/// https://blog.csdn.net/weixin_30411239/article/details/97632834
+/// </summary>
 namespace Nolan.Application.Shared
 {
     /// <summary>
