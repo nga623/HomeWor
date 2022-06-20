@@ -1,4 +1,4 @@
-﻿@model List<Nolan.HK.Domain.Entities.TimeSheetDetail>
+﻿@model List<Nolan.HK.Application.Contracts.Dtos.TimeSheetDetailDto>
 
 @{
     ViewData["Title"] = "Index";
@@ -31,7 +31,7 @@
                         <input class="form-control" name="Date" value=@Html.DisplayFor(modelItem => item.Date) />
                     </td>
                     <td>
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        @*<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
                     </td>
                 </tr>
             }

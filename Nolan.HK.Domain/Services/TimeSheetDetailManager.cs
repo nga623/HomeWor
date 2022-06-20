@@ -17,10 +17,10 @@ namespace Nolan.HK.Domain.Services
             private readonly IEfBasicRepository<TimeSheetDetail> _TimeSheetDetailManager;
          
         public TimeSheetDetailManager(
-         //   IEfBasicRepository<TimeSheetDetail> timeSheetDetailManager
+          IEfBasicRepository<TimeSheetDetail> timeSheetDetailManager
              )
         {
-            //  _TimeSheetDetailManager = timeSheetDetailManager;
+             _TimeSheetDetailManager = timeSheetDetailManager;
         }
         public async Task<int> CreateAsync(TimeSheetDetailCreateDto input)
         {
@@ -29,6 +29,10 @@ namespace Nolan.HK.Domain.Services
             return 1;
             //return  await _service.InsertAsync(model);
 
+        }
+        public   List<TimeSheetDetail> GetListAsync(TimeSheetDetailSearchDto input)
+        {
+         return   _TimeSheetDetailManager.Where(p => p.Note != "").ToList();
         }
     }
 

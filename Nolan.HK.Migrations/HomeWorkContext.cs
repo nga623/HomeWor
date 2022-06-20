@@ -11,9 +11,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Nolan.HK.Migrations
 {
-    public class HomeWorkContext : DbContext
+    public class HomeWorkContext1 : DbContext
     {
-        public HomeWorkContext(DbContextOptions<HomeWorkContext> options)
+        public HomeWorkContext1(DbContextOptions<HomeWorkContext1> options)
 
             : base(options)
         {

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nolan.HK.Migrations;
+using Nolan.Infra.EfCore.PostGresSql;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Nolan.HK.Migrations.Migrations

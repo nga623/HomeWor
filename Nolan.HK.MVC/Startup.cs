@@ -40,7 +40,7 @@ namespace Nolan.HK.MVC
         }
         public void ConfigureContainer(ContainerBuilder builder)
         {
-         
+
             var hostBuilderContext = (HostBuilderContext)_services
             .FirstOrDefault(d => d.ServiceType == typeof(HostBuilderContext))
             ?.ImplementationInstance;
@@ -51,22 +51,22 @@ namespace Nolan.HK.MVC
             var serviceInfo = (IServiceInfo)_services
                 .FirstOrDefault(d => d.ServiceType == typeof(IServiceInfo))
                 ?.ImplementationInstance;
-            
 
-             
-             
-           
+
+
+
+
             var applicationAssembly = Assembly.Load(serviceInfo.AssemblyFullName.Replace("MVC", "Application"));
-             
+
             var applicationModelType = applicationAssembly.GetTypes()
                             .FirstOrDefault(m =>
                                m.FullName != null
                                && typeof(NolanApplicationModule).IsAssignableFrom(m)
                                && !m.IsAbstract);
 
- 
-             builder.RegisterModule<NolanInfraEfCoreModule>();
-            
+
+            builder.RegisterModule<NolanInfraEfCoreModule>();
+
             builder.RegisterModule(Activator.CreateInstance(applicationModelType, configuration, serviceInfo) as IModule);
             Action<ContainerBuilder> completedExecute = null;
             completedExecute?.Invoke(builder);

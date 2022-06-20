@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Nolan.Infra.EfCore.PostGresSql.Repositories;
+using Nolan.Infra.Repository;
 using Nolan.Infra.Repository.IRepositories;
 using System;
 using System.Collections.Generic;
@@ -19,22 +20,33 @@ namespace Nolan.Infra.EfCore.PostGresSql
         protected override void Load(ContainerBuilder builder)
         {
 
+            //注册UOW状态类
+            //builder.RegisterType<UnitOfWorkStatus>()
+            //       .AsSelf()
+            //       .InstancePerLifetimeScope();
 
-          
+            ////注册UOW
+            //builder.RegisterType<UnitOfWork<NolanDbContext>>()
+            //       .As<IUnitOfWork>()
+            //       .InstancePerLifetimeScope();
+
+            ////注册ef公共EfRepository
+            //builder.RegisterGeneric(typeof(EfRepository<>))
+            //       .UsingConstructor(typeof(NolanDbContext))
+            //       .AsImplementedInterfaces()
+            //       .InstancePerLifetimeScope();
+
             //注册ef公共EfBasicRepository
             builder.RegisterGeneric(typeof(EfBasicRepository<>))
-                   .UsingConstructor(typeof(NolanDbContext))
+                   .UsingConstructor(typeof(HomeWorkContext))
                    .AsImplementedInterfaces()
                    .InstancePerLifetimeScope();
 
-
-
-
             //注册Repository服务
             builder.RegisterAssemblyTypes(this.ThisAssembly)
-                  .Where(t => t.IsClosedTypeOf(typeof(IRepository<>)))
-                  .AsImplementedInterfaces()
-                  .InstancePerLifetimeScope();
+                   .Where(t => t.IsClosedTypeOf(typeof(IRepository<>)))
+                   .AsImplementedInterfaces()
+                   .InstancePerLifetimeScope();
         }
 
         /// <summary>

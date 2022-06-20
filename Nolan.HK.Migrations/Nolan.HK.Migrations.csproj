@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Nolan.HK.Domain\Nolan.HK.Domain.csproj" />
+    <ProjectReference Include="..\Nolan.Infra.EfCore.PostGresSql\Nolan.Infra.EfCore.PostGresSql.csproj" />
   </ItemGroup>
 
 </Project>

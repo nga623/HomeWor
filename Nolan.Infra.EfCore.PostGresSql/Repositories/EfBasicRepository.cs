@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Nolan.Infra.Repository;
+using Nolan.Infra.Repository.Entities;
 using Nolan.Infra.Repository.IRepositories;
 using System;
 using System.Collections.Generic;
@@ -16,10 +17,10 @@ namespace Nolan.Infra.EfCore.PostGresSql.Repositories
     /// 适合DDD开发模式,实体必须继承AggregateRoot
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public sealed class EfBasicRepository<TEntity> : AbstractEfBaseRepository<NolanDbContext, TEntity>, IEfBasicRepository<TEntity>
-            where TEntity : Entity, IEntity<Guid>
+    public sealed class EfBasicRepository<TEntity> : AbstractEfBaseRepository<HomeWorkContext, TEntity>, IEfBasicRepository<TEntity>
+             where TEntity : Entity, IEfEntity<Guid>
     {
-        public EfBasicRepository(NolanDbContext dbContext)
+        public EfBasicRepository(HomeWorkContext dbContext)
             : base(dbContext)
         {
         }

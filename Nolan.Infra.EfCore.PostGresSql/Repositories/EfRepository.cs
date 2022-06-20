@@ -1,8 +1,15 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using Nolan.Infra.Repository;
+using Nolan.Infra.Repository.Entities;
+using Nolan.Infra.Repository.IRepositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Z.EntityFramework.Plus;
 
 namespace Nolan.Infra.EfCore.PostGresSql.Repositories
 {
@@ -10,10 +17,10 @@ namespace Nolan.Infra.EfCore.PostGresSql.Repositories
     /// Ef默认的、全功能的仓储实现
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public sealed class EfRepository<TEntity> : AbstractEfBaseRepository<AdncDbContext, TEntity>, IEfRepository<TEntity>
+    public sealed class EfRepository<TEntity> : AbstractEfBaseRepository<HomeWorkContext, TEntity>, IRepository<TEntity>
       where TEntity : EfEntity, new()
     {
-        public EfRepository(AdncDbContext dbContext)
+        public EfRepository(HomeWorkContext dbContext)
             : base(dbContext)
         {
         }
@@ -25,14 +32,14 @@ namespace Nolan.Infra.EfCore.PostGresSql.Repositories
                where TrdEntity : EfEntity
         {
             var queryAble = DbContext.Set<TrdEntity>().AsQueryable();
-            if (writeDb)
-                queryAble = queryAble.TagWith(EfCoreConsts.MAXSCALE_ROUTE_TO_MASTER);
-            if (noTracking)
+            //if (writeDb)
+            //    queryAble = queryAble.TagWith(EfCoreConsts.MAXSCALE_ROUTE_TO_MASTER);
+            //if (noTracking)
                 queryAble = queryAble.AsNoTracking();
             return queryAble;
         }
 
-        public async Task<TEntity> FindAsync(string keyValue, Expression<Func<TEntity, dynamic>> navigationPropertyPath = null, bool writeDb = false, bool noTracking = true, CancellationToken cancellationToken = default)
+        public async Task<TEntity> FindAsync(Guid keyValue, Expression<Func<TEntity, dynamic>> navigationPropertyPath = null, bool writeDb = false, bool noTracking = true, CancellationToken cancellationToken = default)
         {
             var query = this.GetDbSet(writeDb, noTracking).Where(t => t.Id == keyValue);
             if (navigationPropertyPath != null)
@@ -78,7 +85,7 @@ namespace Nolan.Infra.EfCore.PostGresSql.Repositories
             return result;
         }
 
-        public async Task<int> DeleteAsync(string keyValue, CancellationToken cancellationToken = default)
+        public async Task<int> DeleteAsync(Guid keyValue, CancellationToken cancellationToken = default)
         {
             //查询当前上下文中，有没有同Id实体
             var entity = DbContext.Set<TEntity>().Local.FirstOrDefault(x => x.Id == keyValue);
@@ -136,7 +143,7 @@ namespace Nolan.Infra.EfCore.PostGresSql.Repositories
 
         public async Task<int> UpdateAsync(TEntity entity, Expression<Func<TEntity, object>>[] updatingExpressions, CancellationToken cancellationToken = default)
         {
-            if (updatingExpressions.IsNullOrEmpty())
+            //if (updatingExpressions.IsNullOrEmpty())
                 await UpdateAsync(entity, cancellationToken);
 
             var entry = DbContext.Entry(entity);
@@ -147,24 +154,24 @@ namespace Nolan.Infra.EfCore.PostGresSql.Repositories
             if (entry.State == EntityState.Unchanged)
                 return await Task.FromResult(0);
 
-            if (entry.State == EntityState.Modified)
-            {
-                var propNames = updatingExpressions.Select(x => x.GetMemberName()).ToArray();
-                entry.Properties.ForEach(propEntry =>
-                {
-                    if (!propNames.Contains(propEntry.Metadata.Name))
-                        propEntry.IsModified = false;
-                });
-            }
+            //if (entry.State == EntityState.Modified)
+            //{
+            //    var propNames = updatingExpressions.Select(x => x.GetMemberName()).ToArray();
+            //    entry.Properties.ForEach(propEntry =>
+            //    {
+            //        if (!propNames.Contains(propEntry.Metadata.Name))
+            //            propEntry.IsModified = false;
+            //    });
+            //}
 
-            if (entry.State == EntityState.Detached)
-            {
-                entry.State = EntityState.Unchanged;
-                updatingExpressions.ForEach(expression =>
-                {
-                    entry.Property(expression).IsModified = true;
-                });
-            }
+            //if (entry.State == EntityState.Detached)
+            //{
+            //    entry.State = EntityState.Unchanged;
+            //    updatingExpressions.ForEach(expression =>
+            //    {
+            //        entry.Property(expression).IsModified = true;
+            //    });
+            //}
 
             #region removed code
 #pragma warning disable S125 // Sections of code should not be commented out
@@ -198,15 +205,15 @@ namespace Nolan.Infra.EfCore.PostGresSql.Repositories
         public Task<int> UpdateRangeAsync(Expression<Func<TEntity, bool>> whereExpression, Expression<Func<TEntity, TEntity>> updatingExpression, CancellationToken cancellationToken = default)
         {
             var enityType = typeof(TEntity);
-            var hasConcurrencyMember = typeof(IConcurrency).IsAssignableFrom(enityType);
+            //var hasConcurrencyMember = typeof(IConcurrency).IsAssignableFrom(enityType);
 
-            if (hasConcurrencyMember)
-                throw new ArgumentException("该实体有RowVersion列，不能使用批量更新");
+            //if (hasConcurrencyMember)
+            //    throw new ArgumentException("该实体有RowVersion列，不能使用批量更新");
 
             return UpdateRangeInternalAsync(whereExpression, updatingExpression, cancellationToken);
         }
 
-        public async Task<int> UpdateRangeAsync(Dictionary<string, List<(string propertyName, dynamic propertyValue)>> propertyNameAndValues, CancellationToken cancellationToken = default)
+        public async Task<int> UpdateRangeAsync(Dictionary<Guid, List<(string propertyName, dynamic propertyValue)>> propertyNameAndValues, CancellationToken cancellationToken = default)
         {
             var existsEntities = DbContext.Set<TEntity>().Local.Where(x => propertyNameAndValues.Keys.Contains(x.Id));
 

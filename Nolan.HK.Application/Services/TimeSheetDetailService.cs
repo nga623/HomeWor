@@ -33,9 +33,10 @@ namespace Nolan.HK.Application.Services
 
         }
 
-        public Task<List<TimeSheetDetailDto>> GetListAsync(TimeSheetDetailSearchDto input)
+        public List<TimeSheetDetailDto> GetListAsync(TimeSheetDetailSearchDto input)
         {
-            throw new NotImplementedException();
+           var list=   _TimeSheetDetailManager.GetListAsync(input);
+           return Mapper.Map<List<TimeSheetDetailDto>>(list);
         }
     }
 }
