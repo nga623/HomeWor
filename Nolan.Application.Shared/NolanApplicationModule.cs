@@ -27,8 +27,7 @@ namespace Nolan.Application.Shared
             else
                 _repoAssemblieToScan = Assembly.Load(_appAssemblieToScan.FullName.Replace(".Application", ".Repository"));
 
-            //_appModuleName = serviceInfo.ShortName;
-            //_redisSection = configuration.GetRedisSection();
+          
         }
         protected override void Load(ContainerBuilder builder)
         {  //注册依赖模块ActivatingEventArgs
@@ -38,8 +37,7 @@ namespace Nolan.Application.Shared
                        .AsImplementedInterfaces()
                        .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies)
                        .InstancePerLifetimeScope();
-                      // .EnableInterfaceInterceptors();
-            // .InterceptedBy(interceptors.ToArray());
+                   
 
             //注册DtoValidators
             builder.RegisterAssemblyTypes(_appContractsAssemblieToScan)
@@ -49,22 +47,18 @@ namespace Nolan.Application.Shared
         }
         private void LoadDepends(ContainerBuilder builder)
         {
-            
-            //builder.RegisterModuleIfNotRegistered(new AdncInfraEventBusModule(_appAssemblieToScan));
              builder.RegisterModule(new AutoMapperModule(_appAssemblieToScan));
-            //builder.RegisterModuleIfNotRegistered(new AdncInfraCachingModule(_redisSection));
-
             if (_domainAssemblieToScan != null)
             {
                 var modelType = _domainAssemblieToScan.GetTypes().FirstOrDefault(x => x.IsAssignableTo<NolanDomainModule>() && !x.IsAbstract);
                 builder.RegisterModule(System.Activator.CreateInstance(modelType) as Autofac.Module);
             }
-
-            if (_repoAssemblieToScan != null)
-            {
-                var modelType = _repoAssemblieToScan.GetTypes().FirstOrDefault(x => x.IsAssignableTo<NolanRepositoryModule>() && !x.IsAbstract);
-                builder.RegisterModule(System.Activator.CreateInstance(modelType) as Autofac.Module);
-            }
+          
+            //if (_repoAssemblieToScan != null)
+            //{
+            //    var modelType = _repoAssemblieToScan.GetTypes().FirstOrDefault(x => x.IsAssignableTo<NolanRepositoryModule>() && !x.IsAbstract);
+            //    builder.RegisterModule(System.Activator.CreateInstance(modelType) as Autofac.Module);
+            //}
 
         }
     }

@@ -64,10 +64,9 @@ namespace Nolan.HK.MVC
                                && typeof(NolanApplicationModule).IsAssignableFrom(m)
                                && !m.IsAbstract);
 
-            //builder.RegisterModuleIfNotRegistered<AdncInfraMongoModule>();
+ 
              builder.RegisterModule<NolanInfraEfCoreModule>();
-            //builder.RegisterModuleIfNotRegistered(new AdncInfraConsulModule(consulUrl));
-            //builder.RegisterModuleIfNotRegistered(Activator.CreateInstance(applicationModelType, configuration, serviceInfo) as IModule);
+            
             builder.RegisterModule(Activator.CreateInstance(applicationModelType, configuration, serviceInfo) as IModule);
             Action<ContainerBuilder> completedExecute = null;
             completedExecute?.Invoke(builder);

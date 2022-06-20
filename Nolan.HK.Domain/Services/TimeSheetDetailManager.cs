@@ -14,10 +14,10 @@ namespace Nolan.HK.Domain.Services
 
     public class TimeSheetDetailManager : IDomainService
     {
-     //     private readonly IEfBasicRepository<TimeSheetDetail> _TimeSheetDetailManager;
+            private readonly IEfBasicRepository<TimeSheetDetail> _TimeSheetDetailManager;
          
         public TimeSheetDetailManager(
-            //  IEfBasicRepository<TimeSheetDetail> timeSheetDetailManager
+         //   IEfBasicRepository<TimeSheetDetail> timeSheetDetailManager
              )
         {
             //  _TimeSheetDetailManager = timeSheetDetailManager;

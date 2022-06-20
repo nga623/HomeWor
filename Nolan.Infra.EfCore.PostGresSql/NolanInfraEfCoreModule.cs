@@ -18,8 +18,9 @@ namespace Nolan.Infra.EfCore.PostGresSql
         /// <param name="builder"></param>
         protected override void Load(ContainerBuilder builder)
         {
-            
 
+
+          
             //注册ef公共EfBasicRepository
             builder.RegisterGeneric(typeof(EfBasicRepository<>))
                    .UsingConstructor(typeof(NolanDbContext))
