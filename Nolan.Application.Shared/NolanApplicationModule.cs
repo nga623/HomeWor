@@ -53,7 +53,8 @@ namespace Nolan.Application.Shared
                 var modelType = _domainAssemblieToScan.GetTypes().FirstOrDefault(x => x.IsAssignableTo<NolanDomainModule>() && !x.IsAbstract);
                 builder.RegisterModule(System.Activator.CreateInstance(modelType) as Autofac.Module);
             }
-          
+            
+
             //if (_repoAssemblieToScan != null)
             //{
             //    var modelType = _repoAssemblieToScan.GetTypes().FirstOrDefault(x => x.IsAssignableTo<NolanRepositoryModule>() && !x.IsAbstract);
