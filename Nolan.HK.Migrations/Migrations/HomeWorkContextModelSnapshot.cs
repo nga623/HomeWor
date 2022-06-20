@@ -3,7 +3,6 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Nolan.HK.Migrations;
 using Nolan.Infra.EfCore.PostGresSql;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -18,21 +17,7 @@ namespace Nolan.HK.Migrations.Migrations
             modelBuilder
                 .UseIdentityByDefaultColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.0");
-
-            modelBuilder.Entity("Nolan.HK.Domain.Entities.Project", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("ProjectName")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Project");
-                });
+                .HasAnnotation("ProductVersion", "5.0.15");
 
             modelBuilder.Entity("Nolan.HK.Domain.Entities.TimeSheet", b =>
                 {
@@ -63,7 +48,7 @@ namespace Nolan.HK.Migrations.Migrations
             modelBuilder.Entity("Nolan.HK.Domain.Entities.TimeSheetDetail", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(100)
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("Date")
@@ -73,7 +58,8 @@ namespace Nolan.HK.Migrations.Migrations
                         .HasColumnType("text");
 
                     b.Property<Guid>("ProjectID")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasComment("项目id");
 
                     b.Property<int>("TimesheetCount")
                         .HasColumnType("integer");
@@ -87,41 +73,6 @@ namespace Nolan.HK.Migrations.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TimeSheetDetail");
-                });
-
-            modelBuilder.Entity("Nolan.HK.Domain.Entities.User", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Address")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreateTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<DateTime>("EditTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Password")
-                        .HasColumnType("text");
-
-                    b.Property<string>("UserType")
-                        .HasColumnType("text");
-
-                    b.Property<int>("UserTypeEnum")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("User");
                 });
 #pragma warning restore 612, 618
         }

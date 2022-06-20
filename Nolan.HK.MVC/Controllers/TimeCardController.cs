@@ -2,7 +2,7 @@
 using Nolan.HK.Application.Contracts.Dtos;
 using Nolan.HK.Application.Contracts.Services;
 using Nolan.HK.Domain.Entities;
-using Nolan.HK.Migrations;
+ 
 using Nolan.Infra.EfCore.PostGresSql;
 using System;
 using System.Collections.Generic;

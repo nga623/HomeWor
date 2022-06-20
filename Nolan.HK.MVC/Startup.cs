@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Nolan.Application.Shared;
-using Nolan.HK.Migrations;
+ 
 using Nolan.Infra.EfCore.PostGresSql;
 using Nolan.WebApi.Shared;
 using System;
@@ -34,8 +34,19 @@ namespace Nolan.HK.MVC
         public void ConfigureServices(IServiceCollection services)
         {
             _services = services;
-            services.AddDbContext<HomeWorkContext>(options =>
-           options.UseNpgsql(Configuration.GetConnectionString("HomeWorkContext")));
+            //var serviceInfo = (IServiceInfo)services
+            //      .FirstOrDefault(d => d.ServiceType == typeof(IServiceInfo))
+            //      ?.ImplementationInstance;
+            
+
+            services.AddDbContext<HomeWorkContext>(
+                options =>
+           options.UseNpgsql(Configuration.GetConnectionString("HomeWorkContext"), optionsBuilder=>
+           {
+               //
+               optionsBuilder.MigrationsAssembly("Nolan.HK.Migrations, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
+           })
+           );
             services.AddControllersWithViews();
         }
         public void ConfigureContainer(ContainerBuilder builder)
