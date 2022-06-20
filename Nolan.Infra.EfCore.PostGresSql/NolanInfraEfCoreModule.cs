@@ -18,21 +18,7 @@ namespace Nolan.Infra.EfCore.PostGresSql
         /// <param name="builder"></param>
         protected override void Load(ContainerBuilder builder)
         {
-            ////注册UOW状态类
-            //builder.RegisterType<UnitOfWorkStatus>()
-            //       .AsSelf()
-            //       .InstancePerLifetimeScope();
-
-            ////注册UOW
-            //builder.RegisterType<UnitOfWork<AdncDbContext>>()
-            //       .As<IUnitOfWork>()
-            //       .InstancePerLifetimeScope();
-
-            //注册ef公共EfRepository
-            //builder.RegisterGeneric(typeof(EfRepository<>))
-            //       .UsingConstructor(typeof(NolanDbContext))
-            //       .AsImplementedInterfaces()
-            //       .InstancePerLifetimeScope();
+            
 
             //注册ef公共EfBasicRepository
             builder.RegisterGeneric(typeof(EfBasicRepository<>))

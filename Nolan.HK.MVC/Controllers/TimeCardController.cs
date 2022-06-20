@@ -35,12 +35,5 @@ namespace Nolan.HK.MVC.Controllers
             return View();
         }
     }
-    [Serializable]
-    public class TimeSheetDetailDto
-    {
-        
-        public Guid Userid { get; set; }
-        public DateTime Date { get; set; }
-         
-    }
+    
 }

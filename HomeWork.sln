@@ -35,8 +35,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nolan.Infra.EfCore.PostGres
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nolan.WebApi.Shared", "Nolan.WebApi.Shared\Nolan.WebApi.Shared.csproj", "{F56D9BB8-5356-41D4-A84C-71189F91B1CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nolan.HK.Repository", "Nolan.HK.Repository\Nolan.HK.Repository.csproj", "{3BF96EE3-0629-459B-A8E6-107AFF65739A}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,10 +85,6 @@ Global
 		{F56D9BB8-5356-41D4-A84C-71189F91B1CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F56D9BB8-5356-41D4-A84C-71189F91B1CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F56D9BB8-5356-41D4-A84C-71189F91B1CA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3BF96EE3-0629-459B-A8E6-107AFF65739A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3BF96EE3-0629-459B-A8E6-107AFF65739A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3BF96EE3-0629-459B-A8E6-107AFF65739A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3BF96EE3-0629-459B-A8E6-107AFF65739A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -109,7 +103,6 @@ Global
 		{CC57740D-F6C7-4006-9627-3497DA2784E2} = {8A14205E-2B69-41B6-A383-EE8EB0241521}
 		{01971F9A-B216-4FF9-91E8-636689F8679A} = {8A14205E-2B69-41B6-A383-EE8EB0241521}
 		{F56D9BB8-5356-41D4-A84C-71189F91B1CA} = {E35BB2E9-0E04-4C45-A252-A6BE790860CF}
-		{3BF96EE3-0629-459B-A8E6-107AFF65739A} = {E5C7E336-CE74-4231-AE69-9D21C3236317}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {636ACC7A-0DD8-47BA-B8B3-87DA1313A747}

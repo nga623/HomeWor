@@ -9,9 +9,7 @@ using System.Threading.Tasks;
 /// </summary>
 namespace Nolan.Application.Shared
 {
-    /// <summary>
-    /// Application返回结果包装类,无返回类型(void,task)
-    /// </summary>
+     
     public sealed class AppSrvResult
     {
         public AppSrvResult()

@@ -14,6 +14,7 @@ namespace Nolan.HK.Migrations
     public class HomeWorkContext : DbContext
     {
         public HomeWorkContext(DbContextOptions<HomeWorkContext> options)
+
             : base(options)
         {
 
