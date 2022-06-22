@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nolan.Infra.EfCore.PostGresSql;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -9,9 +10,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Nolan.HK.Migrations.Migrations
 {
     [DbContext(typeof(HomeWorkContext))]
-    partial class HomeWorkContextModelSnapshot : ModelSnapshot
+    [Migration("20220622051607_c1")]
+    partial class c1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,15 +53,10 @@ namespace Nolan.HK.Migrations.Migrations
                     b.Property<DateTime>("CreateTime")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<Guid>("ProjectID")
-                        .HasColumnType("uuid");
-
                     b.Property<int>("TotalCount")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProjectID");
 
                     b.ToTable("TimeSheet");
                 });
@@ -136,17 +133,6 @@ namespace Nolan.HK.Migrations.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("User");
-                });
-
-            modelBuilder.Entity("Nolan.HK.Domain.Entities.TimeSheet", b =>
-                {
-                    b.HasOne("Nolan.HK.Domain.Entities.Project", "Project")
-                        .WithMany()
-                        .HasForeignKey("ProjectID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Project");
                 });
 
             modelBuilder.Entity("Nolan.HK.Domain.Entities.TimeSheetDetail", b =>

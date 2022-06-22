@@ -16,27 +16,35 @@ namespace Nolan.HK.Application.Services
 {
     public class TimeSheetDetailService : AbstractAppService, ITimeSheetDetailService
     {
-         private readonly TimeSheetDetailManager _TimeSheetDetailManager;
+        private readonly TimeSheetDetailManager _TimeSheetDetailManager;
         public TimeSheetDetailService(
             TimeSheetDetailManager timeSheetDetailManager
             )
         {
             _TimeSheetDetailManager = timeSheetDetailManager;
         }
-        public async Task<int> CreateAsync(TimeSheetDetailCreateDto input)
+        public async Task<int> CreateAsync(List<TimeSheetCreateDto> input)
         {
-            var model = Mapper.Map<TimeSheetDetail>(input);
-            await  _TimeSheetDetailManager.CreateAsync(input);
-             
-            return 1;
-            //return  await _service.InsertAsync(model);
-
+             var list = Mapper.Map<List<TimeSheet>>(input);
+            //foreach (var item in list)
+            //{
+            //    item.Id = Guid.NewGuid();
+            //    item.pro
+            //    foreach (var detail in item.ListTimeSheetDetails)
+            //    {
+            //        detail.Id = Guid.NewGuid();
+            //        detail.TimesheetID = item.Id;
+                     
+            //    }
+            //}
+            //list = list.Where(p => p.TimesheetCount != 0).ToList();
+            return await _TimeSheetDetailManager.CreateAsync(list);
         }
 
         public List<TimeSheetDetailDto> GetListAsync(TimeSheetDetailSearchDto input)
         {
-           var list=   _TimeSheetDetailManager.GetListAsync(input);
-           return Mapper.Map<List<TimeSheetDetailDto>>(list);
+            var list = _TimeSheetDetailManager.GetListAsync(input);
+            return Mapper.Map<List<TimeSheetDetailDto>>(list);
         }
     }
 }

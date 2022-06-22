@@ -12,10 +12,14 @@ namespace Nolan.HK.Domain.Entities
 	{
 		 
 		public Guid Userid { get; set; }
+		public User User { get; set; }
 		public DateTime Date { get; set; }
+
+		public string Weekday { get; set; }
 		public int TimesheetCount { get; set; }
 		public string Note { get; set; }
 		public Guid ProjectID { get; set; }
+		public Project Project { get; set; }
 		public Guid TimesheetID { get; set; }
 	}
 }

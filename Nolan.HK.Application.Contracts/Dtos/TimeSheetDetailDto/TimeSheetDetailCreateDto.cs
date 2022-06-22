@@ -11,6 +11,7 @@ namespace Nolan.HK.Application.Contracts.Dtos
 		public Guid Userid { get; set; }
 		public DateTime Date { get; set; }
 		public int TimesheetCount { get; set; }
+		public string Weekday { get; set; }
 		public string Note { get; set; }
 		public Guid ProjectID { get; set; }
 		public Guid TimesheetID { get; set; }

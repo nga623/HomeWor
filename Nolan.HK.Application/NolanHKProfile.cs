@@ -17,6 +17,7 @@ namespace Nolan.HK.Application
         {
             CreateMap<TimeSheetDetailCreateDto, TimeSheetDetail>().ReverseMap();
             CreateMap<TimeSheetDetail, TimeSheetDetailDto>().ReverseMap();
+            CreateMap<TimeSheetCreateDto, TimeSheet>().ReverseMap();
         }
     }
 }

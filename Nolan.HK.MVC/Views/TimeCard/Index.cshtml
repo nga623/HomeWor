@@ -9,32 +9,38 @@
 <p>
     <input type="button" id="Create" value="Create" />
 </p>
- 
+
 <form action="@Url.Action("Create")" method="post">
     <p class="form-group">
         <input type="submit" id="submit" value="submit" class="btn btn-primary" />
+        <input type="week" class="btn btn-primary" />
+        @Html.DropDownList("database-dropdownlist", ViewBag.database as IEnumerable<SelectListItem>, new {@id="tempSel" ,@class = "btn btn-success dropdown-toggle form-control display" , @style = "display:none" })
     </p>
     <table class="table" id="timecard">
 
         <tbody>
+            
+           
 
+            @*<tr><td><input class='form-control' name="Userid" type='text' /></td><td><input name="Date" type='text' class='form-control' /> </td><td><a href='#'>Delete</a> </td></tr>*@
+            <tr>
+                
+                @foreach (var item in Model)
+                {
 
-            <tr><td><input class='form-control' name="Userid" type='text' /></td><td><input name="Date" type='text' class='form-control' /> </td><td><a href='#'>Delete</a> </td></tr>
+                    <td><p>@Html.DisplayFor(modelItem => item.Weekday)</p><input type='text' name='TimesheetCount' class='form-control' value=@Html.DisplayFor(modelItem => item.TimesheetCount) /></td>
+                    @*<td>
+                    <input class="form-control" name="Userid" value=@Html.DisplayFor(modelItem => item.Userid) />
+                </td>
+                <td>
+                    <input class="form-control" name="Date" value=@Html.DisplayFor(modelItem => item.Date) />
+                </td>
+                <td>
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>*@
 
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        <input class="form-control" name="Userid" value=@Html.DisplayFor(modelItem => item.Userid) />
-                    </td>
-                    <td>
-                        <input class="form-control" name="Date" value=@Html.DisplayFor(modelItem => item.Date) />
-                    </td>
-                    <td>
-                        @*<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
-                    </td>
-                </tr>
-            }
+                }
+            </tr>
         </tbody>
     </table>
 </form>
@@ -42,24 +48,81 @@
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script>
 
+
+
+
+
     $(function () {
         $("#Create").click(function () {
-            var tr = "<tr><td><input class='form-control' name='Userid'   type='text' /></td><td><input type='text' name='Date' class='form-control' /> </td><td><a href='#'>Delete</a> </td></tr>";
+
+            var tempTd = "";
+            for (var i = 0; i < 7; i++) {
+                var weekday = "";
+                if (i == 0) {
+                    weekday = "Mon";
+                }
+                else if (i == 1) {
+                    weekday = "Tue";
+                }
+                else if (i == 2) {
+                    weekday = "Wed";
+                }
+                else if (i == 3) {
+                    weekday = "Thu";
+                }
+                else if (i == 4) {
+                    weekday = "Fri";
+                }
+                else if (i == 5) {
+                    weekday = "Sat";
+                }
+                else if (i == 6) {
+                    weekday = "Sun";
+                }
+                var td = "<td><p>" + weekday + "</p><input type='text' name='TimesheetCount' class='form-control' /></td>";
+                tempTd += td;
+            }
+            var option = "";
+            $("#tempSel option").each(function () {
+                var val = $(this).val();
+                var text = $(this).text();
+                option += " <option value=" + val + ">" + text + "</option> ";
+            });
+             
+            var select = "<td><select class='btn btn-success dropdown-toggle form-control'>" + option + "</select></td>";
+            var tr = "<tr>" + select + tempTd + "<td><a href='#'>Delete</a> </td></tr>";
             $("#timecard").append(tr);
         });
 
         $("#submit").click(function () {
             var form = $(this).parents('form');
             var result = [];
+            
             form.find('tbody tr').each(function () {
                 var thisItem = $(this);
-                result.push({
-                    Userid: thisItem.find("input:eq(0)").val(),
-                    Date: thisItem.find('input:eq(1)').val()
-                })
+                var ProjectID = $(this).find("td:first").find("select:eq(0)").val();
+                var detail = [];
+                thisItem.find('td').each(function () {
+                    var thistd = $(this);
+                    var hasVal = thistd.find("p:eq(0)").text();
+                    if (hasVal != "" && hasVal != null) {
+                        detail.push({
+                            Weekday: thistd.find("p:eq(0)").text(),
+                            TimesheetCount: thistd.find('input:eq(0)').val()
+                        })
+                    }
+                    
+                });
+                if (ProjectID != "" && ProjectID != null && ProjectID != 0) {
+                    result.push({
+                        ProjectID: ProjectID,
+                        ListTimeSheetDetailCreateDto: detail
+                    });
+                }
+                
             });
             $.post(form.attr('action'), {
-                TimeSheetDetailDto: result, //直接提交json数组
+                timeSheetCreateDto: result,
             }, function (data) {
                 alert(data);
             });
