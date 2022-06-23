@@ -37,15 +37,8 @@ namespace Nolan.HK.MVC.Controllers
                 new SelectListItem(){Value="0",Text="全部" }
             };
             var selectList = new SelectList(projectList, "Id", "ProjectName");
-            foreach (var item in selectList)
-            {
-
-            }
             selectItemList.AddRange(selectList);
             ViewBag.database = selectItemList;
-            //var timeSheetDetail = from m in _conte
-            //
-            //         select m;
             return View(list.ToList());
         }
         [HttpPost]

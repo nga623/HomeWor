@@ -26,7 +26,7 @@ namespace Nolan.HK.Domain.Services
         }
         public async Task<int> CreateAsync(List<TimeSheet> input)
         {
-             
+
             foreach (var item in input)
             {
                 var count = item.ListTimeSheetDetails.Sum(p => p.TimesheetCount);
@@ -37,13 +37,16 @@ namespace Nolan.HK.Domain.Services
                 item.ApproveStatus = Enum.ApproveStatusEnum.UnApprove.ToString();
                 foreach (var detail in item.ListTimeSheetDetails)
                 {
+                    detail.Id = Guid.NewGuid();
                     detail.ProjectID = item.ProjectID;
                     detail.Userid = new Guid("6ecd8c99-4036-403d-bf84-cf8400f67836");
                     detail.TimesheetID = item.Id;
                 }
+                await _TimeSheet.InsertAsync(item);
+              //  await _TimeSheetDetailManager.InsertRangeAsync(item.ListTimeSheetDetails);
             }
-           
-            return await _TimeSheet.InsertRangeAsync(input);
+            return 1;
+            
             //   return await _TimeSheetDetailManager.InsertRangeAsync(list);
             //  return 
 

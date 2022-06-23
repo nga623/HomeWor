@@ -13,31 +13,31 @@
 <form action="@Url.Action("Create")" method="post">
     <p class="form-group">
         <input type="submit" id="submit" value="submit" class="btn btn-primary" />
-        <input type="week" class="btn btn-primary" />
-        @Html.DropDownList("database-dropdownlist", ViewBag.database as IEnumerable<SelectListItem>, new {@id="tempSel" ,@class = "btn btn-success dropdown-toggle form-control display" , @style = "display:none" })
+        <input type="week" id="week" class="btn btn-primary" />
+        @Html.DropDownList("database-dropdownlist", ViewBag.database as IEnumerable<SelectListItem>, new { @id = "tempSel", @class = "btn btn-success dropdown-toggle form-control display", @style = "display:none" })
     </p>
     <table class="table" id="timecard">
 
         <tbody>
-            
-           
+
+
 
             @*<tr><td><input class='form-control' name="Userid" type='text' /></td><td><input name="Date" type='text' class='form-control' /> </td><td><a href='#'>Delete</a> </td></tr>*@
             <tr>
-                
+
                 @foreach (var item in Model)
                 {
 
                     <td><p>@Html.DisplayFor(modelItem => item.Weekday)</p><input type='text' name='TimesheetCount' class='form-control' value=@Html.DisplayFor(modelItem => item.TimesheetCount) /></td>
                     @*<td>
-                    <input class="form-control" name="Userid" value=@Html.DisplayFor(modelItem => item.Userid) />
-                </td>
-                <td>
-                    <input class="form-control" name="Date" value=@Html.DisplayFor(modelItem => item.Date) />
-                </td>
-                <td>
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>*@
+                            <input class="form-control" name="Userid" value=@Html.DisplayFor(modelItem => item.Userid) />
+                        </td>
+                        <td>
+                            <input class="form-control" name="Date" value=@Html.DisplayFor(modelItem => item.Date) />
+                        </td>
+                        <td>
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>*@
 
                 }
             </tr>
@@ -53,8 +53,29 @@
 
 
     $(function () {
+        function addDate(date, days) {
+            var d = new Date(date);
+            d.setDate(d.getDate() + days);
+            var month = d.getMonth() + 1;
+            var day = d.getDate();
+            if (month < 10) {
+                month = "0" + month;
+            }
+            if (day < 10) {
+                day = "0" + day;
+            }
+            var val = d.getFullYear() + "-" + month + "-" + day;
+            return val;
+        }
         $("#Create").click(function () {
+         var first=   DateRange($("#week").val()); //获取周日历起始截止日期
+            
 
+
+             
+           
+            alert(addDate(first, 1));
+           
             var tempTd = "";
             for (var i = 0; i < 7; i++) {
                 var weekday = "";
@@ -88,7 +109,7 @@
                 var text = $(this).text();
                 option += " <option value=" + val + ">" + text + "</option> ";
             });
-             
+
             var select = "<td><select class='btn btn-success dropdown-toggle form-control'>" + option + "</select></td>";
             var tr = "<tr>" + select + tempTd + "<td><a href='#'>Delete</a> </td></tr>";
             $("#timecard").append(tr);
@@ -97,7 +118,7 @@
         $("#submit").click(function () {
             var form = $(this).parents('form');
             var result = [];
-            
+
             form.find('tbody tr').each(function () {
                 var thisItem = $(this);
                 var ProjectID = $(this).find("td:first").find("select:eq(0)").val();
@@ -111,15 +132,15 @@
                             TimesheetCount: thistd.find('input:eq(0)').val()
                         })
                     }
-                    
+
                 });
                 if (ProjectID != "" && ProjectID != null && ProjectID != 0) {
                     result.push({
                         ProjectID: ProjectID,
-                        ListTimeSheetDetailCreateDto: detail
+                        ListTimeSheetDetails: detail
                     });
                 }
-                
+
             });
             $.post(form.attr('action'), {
                 timeSheetCreateDto: result,
@@ -128,5 +149,61 @@
             });
             return false;
         });
+
     })
+
+    var startDate = "";
+    //var endDate = "";
+    function DateRange(value) {
+        var year, week, date;
+        var month;
+        var s_month = ["04", "06", "09", "11"];
+        var b_month = ["01", "03", "05", "07", "08", "10", "12"];
+        if ((/^(\d{4}-\d{2})$/).test(value)) { 				//月份选择
+            year = parseInt(value.substring(0, 4));
+            month = value.substring(5, 7);
+            startDate = year + "-" + month + "-" + "01";
+            if (s_month.indexOf(month) > -1) { //小月
+                endDate = year + "-" + month + "-" + "30";
+            }
+            else if (b_month.indexOf(month) > -1) { //大月
+                endDate = year + "-" + month + "-" + "31";
+            }
+            else if (month == "02") { //2月
+                if (year % 4 != 0)
+                    endDate = year + "-" + month + "-" + "28";
+                else
+                    endDate = year + "-" + month + "-" + "29";
+            }
+        }
+        else if (value.indexOf("W") != -1) { 			//周选择
+            year = parseInt(value.substring(0, 4));
+            week = parseInt(value.substring(6, 8));
+            var days = week * 7;
+            var f = year + "-01-01";
+            var first = new Date(f).getDay();//一年第一天周几
+            var offset = first == 1 ? 0 : first - 1;//偏移
+            var monthDays = (year % 4 == 0) ? [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] : [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+            for (month = 0; days > 0; month++) {
+                days -= monthDays[month];
+            }
+            month -= 1;
+            days += monthDays[month] - offset;//在原先理解的基础上算出的某一周最后一天,偏移后就是某一周最后一天的日期
+            endDate = year + "-" + month + "-" + days;
+            if (days - 6 > 0)//起始日期是否同一个月
+                days = days - 6;
+            else {
+                days = 6 - days;
+                if (month - 1 < 1) { //回到上一年
+                    year -= 1;
+                    month = 12;
+                }
+                else month -= 1;
+                days = monthDays[month] - days;
+            }
+            startDate = year + "-" + month + "-" + days;
+
+            return endDate;
+        }
+    }
 </script>
