@@ -1,56 +1,55 @@
-﻿@model List<Nolan.HK.Application.Contracts.Dtos.TimeSheetDetailDto>
+﻿@model List<Nolan.HK.Application.Contracts.Dtos.TimeSheetDto>
 
-@{
-    ViewData["Title"] = "Index";
-}
 
-<h1>Index</h1>
+<h1>Homework</h1>
+<br />
+<br />
+<br />
 
-<p>
-    <input type="button" id="Create" value="Create" />
-</p>
+<form action="@Url.Action("Create")">
+    <div class="form-group">
 
-<form action="@Url.Action("Create")" method="post">
-    <p class="form-group">
-        <input type="submit" id="submit" value="submit" class="btn btn-primary" />
-        <input type="week" id="week" class="btn btn-primary" />
-        @Html.DropDownList("database-dropdownlist", ViewBag.database as IEnumerable<SelectListItem>, new { @id = "tempSel", @class = "btn btn-success dropdown-toggle form-control display", @style = "display:none" })
-    </p>
+        <p>
+            <input type="button" id="Create" class="btn btn-primary" value="Create" />
+            <input value="2022-W25" type="week" id="week" class="btn btn-primary" />
+            <input style=" float:right;width:200px" type="submit" id="submit" value="submit" class="btn btn-primary" />
+        </p>
+
+
+
+
+    </div>
+    @Html.DropDownList("database-dropdownlist", ViewBag.database as IEnumerable<SelectListItem>, new { @id = "tempSel", @class = "btn btn-success dropdown-toggle form-control display", @style = "display:none" })
     <table class="table" id="timecard">
-
         <tbody>
 
+            @foreach (var timeSheet in Model)
+            {
+                <tr>
+                    <td style="vertical-align: bottom; width: 200px">
+                        @Html.DropDownList("database-dropdownlist", ViewBag.database as IEnumerable<SelectListItem>, new { @selected = timeSheet.ProjectID, @class = "btn btn-success dropdown-toggle form-control display", })
+                    </td>
+                    @foreach (var item in timeSheet.ListTimeSheetDetails)
+                    {
+                <td>
 
+                    <div>@Html.DisplayFor(modelItem => item.Date)</div>
+                    <p>@Html.DisplayFor(modelItem => item.Weekday)</p>
+                    <input type='text' name='TimesheetCount' class='form-control' value=@Html.DisplayFor(modelItem => item.TimesheetCount) />
+                </td>
+                    }
+                    <td style="vertical-align: bottom; width: 100px">
 
-            @*<tr><td><input class='form-control' name="Userid" type='text' /></td><td><input name="Date" type='text' class='form-control' /> </td><td><a href='#'>Delete</a> </td></tr>*@
-            <tr>
-
-                @foreach (var item in Model)
-                {
-
-                    <td><p>@Html.DisplayFor(modelItem => item.Weekday)</p><input type='text' name='TimesheetCount' class='form-control' value=@Html.DisplayFor(modelItem => item.TimesheetCount) /></td>
-                    @*<td>
-                            <input class="form-control" name="Userid" value=@Html.DisplayFor(modelItem => item.Userid) />
-                        </td>
-                        <td>
-                            <input class="form-control" name="Date" value=@Html.DisplayFor(modelItem => item.Date) />
-                        </td>
-                        <td>
-                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                        </td>*@
-
-                }
-            </tr>
+                        <a asp-action="Delete" class="btn btn-primary" asp-route-id="@timeSheet.Id">Delete</a>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
 </form>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script>
-
-
-
-
 
     $(function () {
         function addDate(date, days) {
@@ -64,19 +63,14 @@
             if (day < 10) {
                 day = "0" + day;
             }
-            var val = d.getFullYear() + "-" + month + "-" + day;
+            var val = d.getFullYear() + "/" + month + "/" + day;
             return val;
         }
         $("#Create").click(function () {
-         var first=   DateRange($("#week").val()); //获取周日历起始截止日期
-            
 
-
-             
-           
-            alert(addDate(first, 1));
-           
+            var first = DateRange($("#week").val()); //获取周日历起始截止日期
             var tempTd = "";
+            var firstDay = "";
             for (var i = 0; i < 7; i++) {
                 var weekday = "";
                 if (i == 0) {
@@ -100,7 +94,8 @@
                 else if (i == 6) {
                     weekday = "Sun";
                 }
-                var td = "<td><p>" + weekday + "</p><input type='text' name='TimesheetCount' class='form-control' /></td>";
+                firstDay = addDate(first, i + 1)
+                var td = "<td><div>" + firstDay + "</div><p>" + weekday + "</p><input type='text' name='TimesheetCount' class='form-control' /></td>";
                 tempTd += td;
             }
             var option = "";
@@ -110,8 +105,8 @@
                 option += " <option value=" + val + ">" + text + "</option> ";
             });
 
-            var select = "<td><select class='btn btn-success dropdown-toggle form-control'>" + option + "</select></td>";
-            var tr = "<tr>" + select + tempTd + "<td><a href='#'>Delete</a> </td></tr>";
+            var select = "<td style='vertical-align: bottom;width:200px'><select class='btn btn-success dropdown-toggle form-control'>" + option + "</select></td>";
+            var tr = "<tr>" + select + tempTd + " </tr>";
             $("#timecard").append(tr);
         });
 
@@ -122,6 +117,10 @@
             form.find('tbody tr').each(function () {
                 var thisItem = $(this);
                 var ProjectID = $(this).find("td:first").find("select:eq(0)").val();
+                //if (ProjectID == 0) {
+                //    alert("请选择项目");
+                //    return;
+                //}
                 var detail = [];
                 thisItem.find('td').each(function () {
                     var thistd = $(this);
@@ -129,7 +128,9 @@
                     if (hasVal != "" && hasVal != null) {
                         detail.push({
                             Weekday: thistd.find("p:eq(0)").text(),
-                            TimesheetCount: thistd.find('input:eq(0)').val()
+                            Date: thistd.find("div:eq(0)").text(),
+                            TimesheetCount: thistd.find('input:eq(0)').val(),
+
                         })
                     }
 
@@ -145,7 +146,7 @@
             $.post(form.attr('action'), {
                 timeSheetCreateDto: result,
             }, function (data) {
-                alert(data);
+                location.reload();
             });
             return false;
         });
@@ -201,7 +202,7 @@
                 else month -= 1;
                 days = monthDays[month] - days;
             }
-            startDate = year + "-" + month + "-" + days;
+            startDate = year + "/" + month + "/" + days;
 
             return endDate;
         }

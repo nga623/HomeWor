@@ -11,7 +11,7 @@ namespace Nolan.HK.Application.Contracts.Dtos
 		public string ProjectID { get; set; }
 
 
-		//public List<TimeSheetDetail> ListTimeSheetDetails { get; set; }
-		public List<TimeSheetDetailCreateDto> ListTimeSheetDetails { get; set; }
+		 
+		public List<TimeSheetDetailDto> ListTimeSheetDetails { get; set; }
 	}
 }

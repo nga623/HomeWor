@@ -9,9 +9,9 @@ namespace Nolan.HK.Application.Contracts.Dtos
    public class TimeSheetDto
     {
 		public string ProjectID { get; set; }
+		public Guid Id { get; set; }
 
 
-
-		public List<TimeSheetDetailDto> ListTimeSheetDetailDto { get; set; }
+		public List<TimeSheetDetailDto> ListTimeSheetDetails { get; set; }
 	}
 }

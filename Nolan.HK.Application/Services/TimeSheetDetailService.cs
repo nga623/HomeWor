@@ -26,18 +26,6 @@ namespace Nolan.HK.Application.Services
         public async Task<int> CreateAsync(List<TimeSheetCreateDto> input)
         {
              var list = Mapper.Map<List<TimeSheet>>(input);
-            //foreach (var item in list)
-            //{
-            //    item.Id = Guid.NewGuid();
-            //    item.pro
-            //    foreach (var detail in item.ListTimeSheetDetails)
-            //    {
-            //        detail.Id = Guid.NewGuid();
-            //        detail.TimesheetID = item.Id;
-                     
-            //    }
-            //}
-            //list = list.Where(p => p.TimesheetCount != 0).ToList();
             return await _TimeSheetDetailManager.CreateAsync(list);
         }
 
