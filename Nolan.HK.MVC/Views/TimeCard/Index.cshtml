@@ -52,9 +52,9 @@
 <script>
 
     $(function () {
-        var token = sessionStorage.getItem("key");
+        var token = "Bearer " + sessionStorage.getItem("key");
         $.ajaxSetup({
-            header: { token: token }
+            header: { Authorization: token }
         });
         function DateRange(value) {
             var startDate = "";

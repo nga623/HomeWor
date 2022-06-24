@@ -59,9 +59,9 @@
 
                 var token = "Bearer " + sessionStorage.getItem("key");
                 $.ajax({
-                    url: "/TimeCard/Index",
+                    url: "/TimeCard/Intail",
                     type: 'get',
-
+                    async: false,//同步
                     //data: JSON.stringify({data:{status: "start"}}),
                     data: { timeSheetCreateDto: result },
                     cache: false,
@@ -73,9 +73,9 @@
                         xhr.setRequestHeader('Authorization', token);
                     },
                     success: function (res) {
-                        // (res.code === 200) {
-                        window.location.href = "/TimeCard/Intail";
-                        // }
+                         
+                        window.location.href = "/TimeCard/Index";
+                       
                     },
                     error: function (e) {
                         alert("没有权限");

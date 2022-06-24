@@ -38,11 +38,10 @@ namespace Nolan.HK.MVC.Controllers
         }
         public IActionResult Intail()
         {
-            return View("Index");
+            return View();
         }
 
         [Authorize]
-        [HttpGet]
         public IActionResult Index()
         {
             var list = _TimeSheetService.GetListAsync(null);
