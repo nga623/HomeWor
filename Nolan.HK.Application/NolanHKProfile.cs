@@ -20,6 +20,7 @@ namespace Nolan.HK.Application
             CreateMap<TimeSheetCreateDto, TimeSheet>().ReverseMap();
             CreateMap<TimeSheet, TimeSheetDto>().ReverseMap();
             CreateMap<TimeSheetDetail, TimeSheetDetailDto>().ReverseMap();
+            CreateMap<User, UserDto>().ReverseMap();
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Nolan.HK.Domain.Entities
 {
 	public class User : EfFullAuditEntity
 	{
-		 
+		
 		public string Name { get; set; }
 		public string Password { get; set; }
 		public string Email { get; set; }

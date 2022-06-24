@@ -107,7 +107,7 @@ namespace Nolan.HK.MVC
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=TimeCard}/{action=Index}/{id?}");
+                    pattern: "{controller=User}/{action=Login}/{id?}");
             });
         }
     }

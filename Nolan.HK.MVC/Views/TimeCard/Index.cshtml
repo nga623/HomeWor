@@ -69,6 +69,7 @@
         $("#Create").click(function () {
 
             var first = DateRange($("#week").val()); //获取周日历起始截止日期
+            alert(first);
             var tempTd = "";
             var firstDay = "";
             for (var i = 0; i < 7; i++) {
@@ -190,7 +191,8 @@
             }
             month -= 1;
             days += monthDays[month] - offset;//在原先理解的基础上算出的某一周最后一天,偏移后就是某一周最后一天的日期
-            endDate = year + "-" + month + "-" + days;
+            days = Math.abs(days);
+            endDate = year + "/" + month + "/" + days;
             if (days - 6 > 0)//起始日期是否同一个月
                 days = days - 6;
             else {

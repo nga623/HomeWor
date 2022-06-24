@@ -20,14 +20,14 @@ namespace Nolan.HK.MVC.Controllers
         private readonly ITimeSheetService _TimeSheetService;
         private readonly IEfBasicRepository<TimeSheet> _TimeSheet;
         private readonly IEfBasicRepository<Project> _Project;
-        public TimeCardController(
-        HomeWorkContext context,
-
-            ITimeSheetDetailService timeSheetDetailService
+        public TimeCardController
+            (
+              HomeWorkContext context
+            , ITimeSheetDetailService timeSheetDetailService
             , IEfBasicRepository<Project> project
             , IEfBasicRepository<TimeSheet> timeSheet
             , ITimeSheetService timeSheetService
-            )
+             )
         {
             _TimeSheetDetailService = timeSheetDetailService;
             _context = context;
