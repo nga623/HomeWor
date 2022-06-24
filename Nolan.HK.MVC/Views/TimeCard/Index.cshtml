@@ -152,7 +152,8 @@
             return false;
         });
 
-    })
+    });
+    
 
     var startDate = "";
     //var endDate = "";
@@ -191,7 +192,7 @@
             }
             month -= 1;
             days += monthDays[month] - offset;//在原先理解的基础上算出的某一周最后一天,偏移后就是某一周最后一天的日期
-            days = Math.abs(days);
+            //days = Math.abs(days);
             endDate = year + "/" + month + "/" + days;
             if (days - 6 > 0)//起始日期是否同一个月
                 days = days - 6;
