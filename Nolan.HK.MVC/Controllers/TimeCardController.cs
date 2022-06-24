@@ -36,7 +36,13 @@ namespace Nolan.HK.MVC.Controllers
             _TimeSheet = timeSheet;
             _TimeSheetService = timeSheetService;
         }
-        
+        public IActionResult Intail()
+        {
+            return View("Index");
+        }
+
+        [Authorize]
+        [HttpGet]
         public IActionResult Index()
         {
             var list = _TimeSheetService.GetListAsync(null);
