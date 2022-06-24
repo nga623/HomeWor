@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nolan.HK.Application.Contracts.Dtos;
 using Nolan.HK.Application.Contracts.Services;
@@ -35,6 +36,7 @@ namespace Nolan.HK.MVC.Controllers
             _TimeSheet = timeSheet;
             _TimeSheetService = timeSheetService;
         }
+        
         public IActionResult Index()
         {
             var list = _TimeSheetService.GetListAsync(null);
@@ -48,7 +50,7 @@ namespace Nolan.HK.MVC.Controllers
             ViewBag.database = selectItemList;
             return View(list.ToList());
         }
-
+        [Authorize]
         public ActionResult Create(List<TimeSheetCreateDto> timeSheetCreateDto)
         {
             var list = _TimeSheet.Where(p => p.Id != Guid.Empty).ToList();

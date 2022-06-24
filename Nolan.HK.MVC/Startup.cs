@@ -1,6 +1,7 @@
 using Autofac;
 using Autofac.Core;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -8,18 +9,21 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Nolan.Application.Shared;
- 
+
 using Nolan.Infra.EfCore.PostGresSql;
 using Nolan.WebApi.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Nolan.HK.MVC
 {
+    
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -33,15 +37,41 @@ namespace Nolan.HK.MVC
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //SecurityKey Issuer Audience
+
+            var jwtSetting = new JwtSetting();
+            jwtSetting.SecurityKey = "d0ecd23c-dfdb-4005-a2ea-0fea210c858a";
+            jwtSetting.Issuer = "jwtIssuertest";
+            jwtSetting.Audience = "jwtAudiencetest";
+            Configuration.Bind("JwtSetting", jwtSetting);
+
+            services
+              .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+              .AddJwtBearer(options =>
+              {
+
+                  options.TokenValidationParameters = new TokenValidationParameters
+                  {
+                      ValidateIssuer = false,
+                      ValidateActor=false,
+                      ValidateAudience=false,
+                      ValidIssuer = jwtSetting.Issuer,
+                      ValidAudience = jwtSetting.Audience,
+                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSetting.SecurityKey)),
+                      // 默认允许 300s  的时间偏移量，设置为0
+                      ClockSkew = TimeSpan.Zero
+                  };
+              });
+
             _services = services;
             //var serviceInfo = (IServiceInfo)services
             //      .FirstOrDefault(d => d.ServiceType == typeof(IServiceInfo))
             //      ?.ImplementationInstance;
-            
+
 
             services.AddDbContext<HomeWorkContext>(
                 options =>
-           options.UseNpgsql(Configuration.GetConnectionString("HomeWorkContext"), optionsBuilder=>
+           options.UseNpgsql(Configuration.GetConnectionString("HomeWorkContext"), optionsBuilder =>
            {
                //
                optionsBuilder.MigrationsAssembly("Nolan.HK.Migrations, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
@@ -51,6 +81,10 @@ namespace Nolan.HK.MVC
         }
         public void ConfigureContainer(ContainerBuilder builder)
         {
+
+
+
+
 
             var hostBuilderContext = (HostBuilderContext)_services
             .FirstOrDefault(d => d.ServiceType == typeof(HostBuilderContext))
@@ -81,10 +115,14 @@ namespace Nolan.HK.MVC
             builder.RegisterModule(Activator.CreateInstance(applicationModelType, configuration, serviceInfo) as IModule);
             Action<ContainerBuilder> completedExecute = null;
             completedExecute?.Invoke(builder);
+
+
+
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+         
             AutofacUtil.Container = app.ApplicationServices.GetAutofacRoot();
             if (env.IsDevelopment())
             {
@@ -101,8 +139,8 @@ namespace Nolan.HK.MVC
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
