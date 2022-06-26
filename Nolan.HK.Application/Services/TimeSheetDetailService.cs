@@ -23,10 +23,10 @@ namespace Nolan.HK.Application.Services
         {
             _TimeSheetDetailManager = timeSheetDetailManager;
         }
-        public async Task<int> CreateAsync(List<TimeSheetCreateDto> input)
+        public async Task<int> CreateAsync(List<TimeSheetCreateDto> input,string userName)
         {
              var list = Mapper.Map<List<TimeSheet>>(input);
-            return await _TimeSheetDetailManager.CreateAsync(list);
+            return await _TimeSheetDetailManager.CreateAsync(list, userName);
         }
 
         public List<TimeSheetDetailDto> GetListAsync(TimeSheetDetailSearchDto input)

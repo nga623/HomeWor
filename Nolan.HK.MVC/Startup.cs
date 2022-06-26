@@ -78,6 +78,7 @@ namespace Nolan.HK.MVC
            })
            );
             services.AddControllersWithViews();
+            services.AddHttpContextAccessor();
         }
         public void ConfigureContainer(ContainerBuilder builder)
         {
@@ -141,6 +142,7 @@ namespace Nolan.HK.MVC
 
             app.UseAuthentication();
             app.UseAuthorization();
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

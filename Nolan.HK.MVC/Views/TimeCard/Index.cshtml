@@ -39,8 +39,11 @@
                 </td>
                     }
                     <td style="vertical-align: bottom; width: 100px">
-
+                        @if (timeSheet.UserType == 1)
+                        { 
                         <a asp-action="Delete" class="btn btn-primary" asp-route-id="@timeSheet.Id">Delete</a>
+                        }
+                        
                     </td>
                 </tr>
             }
@@ -238,13 +241,8 @@
                     'Content-Type': 'application/x-www-form-urlencoded'  //multipart/form-data;boundary=--xxxxxxx   application/json
                 },
                 success: function (res) {
-                    if (res.code === 200) {
-
-                    }
-                },
-                error: function (e) {
-                    alert("没有权限");
-                }
+                     
+                } 
             });
 
             return false;

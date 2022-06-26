@@ -10,7 +10,7 @@ namespace Nolan.HK.Application.Contracts.Dtos
     {
 		public string ProjectID { get; set; }
 		public Guid Id { get; set; }
-
+		public int UserType { get; set; }
 
 		public List<TimeSheetDetailDto> ListTimeSheetDetails { get; set; }
 	}

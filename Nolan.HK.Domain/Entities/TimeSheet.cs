@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Nolan.HK.Domain.Entities
 {
-	public class TimeSheet: EfFullAuditEntity
+	public class TimeSheet : EfFullAuditEntity
 	{
-		 
+
 		public DateTime CreateTime { get; set; }
 		public int TotalCount { get; set; }
 		public DateTime ApproveTime { get; set; }
@@ -19,6 +19,8 @@ namespace Nolan.HK.Domain.Entities
 		public List<TimeSheetDetail> ListTimeSheetDetails { get; set; }
 		public Guid ProjectID { get; set; }
 		public Project Project { get; set; }
+		public Guid Userid { get; set; }
+		public User User { get; set; }
 	}
 	
 }

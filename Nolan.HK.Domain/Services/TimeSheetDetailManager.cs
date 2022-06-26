@@ -1,7 +1,7 @@
 ﻿using Nolan.Domain.Shared;
 using Nolan.HK.Application.Contracts.Dtos;
 using Nolan.HK.Domain.Entities;
-
+using Nolan.HK.Domain.Enum;
 using Nolan.Infra.Repository.IRepositories;
 using System;
 using System.Collections.Generic;
@@ -16,22 +16,32 @@ namespace Nolan.HK.Domain.Services
     {
         private readonly IEfBasicRepository<TimeSheetDetail> _TimeSheetDetailManager;
         private readonly IEfBasicRepository<TimeSheet> _TimeSheet;
+        private readonly IEfBasicRepository<User> _User;
         public TimeSheetDetailManager(
           IEfBasicRepository<TimeSheetDetail> timeSheetDetailManager
            , IEfBasicRepository<TimeSheet> timeSheet
+            , IEfBasicRepository<User> user
              )
         {
             _TimeSheetDetailManager = timeSheetDetailManager;
             _TimeSheet = timeSheet;
+            _User = user;
         }
-        public async Task<int> CreateAsync(List<TimeSheet> input)
+        public async Task<int> CreateAsync(List<TimeSheet> input, string userName)
         {
+            var listUser = _User.Where(p => p.Name != null).ToList();
+            var user = listUser.Where(p => p.Name == userName).FirstOrDefault();
+
+            var listSheet = _TimeSheet.Where(p => p.Id != Guid.Empty).ToList();
+            listSheet = listSheet.Where(p => p.ApproveStatusEnum == ApproveStatusEnum.UnApprove&&p.Userid==user.Id).ToList();
+            var del = _TimeSheet.RemoveRangeAsync(listSheet).Result;
 
             foreach (var item in input)
             {
                 var count = item.ListTimeSheetDetails.Sum(p => p.TimesheetCount);
                 item.Id = Guid.NewGuid();
                 item.TotalCount = count;
+                item.Userid = user.Id;
                 item.CreateTime = DateTime.Now;
                 item.ApproveStatusEnum = Enum.ApproveStatusEnum.UnApprove;
                 item.ApproveStatus = Enum.ApproveStatusEnum.UnApprove.ToString();
@@ -39,22 +49,12 @@ namespace Nolan.HK.Domain.Services
                 {
                     detail.Id = Guid.NewGuid();
                     detail.ProjectID = item.ProjectID;
-                    detail.Userid = new Guid("6ecd8c99-4036-403d-bf84-cf8400f67836");
+                    detail.Userid = user.Id;
                     detail.TimesheetID = item.Id;
                 }
                 await _TimeSheet.InsertAsync(item);
-              //  await _TimeSheetDetailManager.InsertRangeAsync(item.ListTimeSheetDetails);
             }
             return 1;
-            
-            //   return await _TimeSheetDetailManager.InsertRangeAsync(list);
-            //  return 
-
-            // _TimeSheetDetailManager.InsertAsync();
-            //var model = Mapper.Map<TimeSheetDetail>(input);
-
-            //return  await _service.InsertAsync(model);
-
         }
         public List<TimeSheetDetail> GetListAsync(TimeSheetDetailSearchDto input)
         {

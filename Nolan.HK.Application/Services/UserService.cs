@@ -37,7 +37,7 @@ namespace Nolan.HK.Application.Services
             {
                 return 0;
             }
-            
+
         }
 
         public UserDto GetAsync(UserDto input)
@@ -47,12 +47,14 @@ namespace Nolan.HK.Application.Services
             return Mapper.Map<UserDto>(user);
         }
 
-        public async Task<bool> LoginAsync(UserDto input)
+        public async Task<UserDto> LoginAsync(UserDto input)
         {
             var listUser = _User.Where(p => p.Id != Guid.Empty).ToList();
             await Task.Delay(100);
-            return listUser.Any(p => p.Name == input.Name&&p.Password==input.Password);
-            // return user == null ? false : true;
+            var user = listUser.Where(p => p.Name == input.Name && p.Password == input.Password).FirstOrDefault();
+
+            return Mapper.Map<UserDto>(user);
+
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nolan.HK.Application.Contracts.Dtos;
@@ -10,6 +11,7 @@ using Nolan.Infra.Repository.IRepositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Nolan.HK.MVC.Controllers
@@ -21,6 +23,8 @@ namespace Nolan.HK.MVC.Controllers
         private readonly ITimeSheetService _TimeSheetService;
         private readonly IEfBasicRepository<TimeSheet> _TimeSheet;
         private readonly IEfBasicRepository<Project> _Project;
+        private readonly IHttpContextAccessor _IHttpContextAccessor;
+        private readonly IEfBasicRepository<User> _User;
         public TimeCardController
             (
               HomeWorkContext context
@@ -28,6 +32,8 @@ namespace Nolan.HK.MVC.Controllers
             , IEfBasicRepository<Project> project
             , IEfBasicRepository<TimeSheet> timeSheet
             , ITimeSheetService timeSheetService
+            , IHttpContextAccessor httpContextAccessor
+            , IEfBasicRepository<User> user
              )
         {
             _TimeSheetDetailService = timeSheetDetailService;
@@ -35,33 +41,62 @@ namespace Nolan.HK.MVC.Controllers
             _Project = project;
             _TimeSheet = timeSheet;
             _TimeSheetService = timeSheetService;
+            _IHttpContextAccessor = httpContextAccessor;
+            _User = user;
         }
+
         public IActionResult Intail()
         {
             return View();
         }
+        [TokenActionFilter]
+        [HttpPost]
+        public ActionResult GetToken()
+        {
+            var cureetUser = _IHttpContextAccessor.HttpContext.User.GetUser();
+            UserName = cureetUser.Name;
+            UserType = cureetUser.UserTypeEnum;
+            return Json(null);
+        }
+        public static string UserName;
+        public static string UserType;
 
-        [Authorize]
+
         public IActionResult Index()
         {
-            var list = _TimeSheetService.GetListAsync(null);
-            var projectList = _Project.Where(p => p.ProjectName != "").ToList();
-            var selectItemList = new List<SelectListItem>()
-            {
 
-            };
-            var selectList = new SelectList(projectList, "Id", "ProjectName");
-            selectItemList.AddRange(selectList);
-            ViewBag.database = selectItemList;
-            return View(list.ToList());
+            if (UserName != null)
+            {
+                TimeSheetSearchDto timeSheetSearchDto = new TimeSheetSearchDto();
+                timeSheetSearchDto.User = UserName;
+                timeSheetSearchDto.UserType = Convert.ToInt32(UserType);
+                var list = _TimeSheetService.GetListAsync(timeSheetSearchDto);
+                foreach (var item in list)
+                {
+                    item.UserType = Convert.ToInt32(UserType);
+                }
+                var projectList = _Project.Where(p => p.ProjectName != "").ToList();
+                var selectItemList = new List<SelectListItem>()
+                {
+
+                };
+                var selectList = new SelectList(projectList, "Id", "ProjectName");
+                selectItemList.AddRange(selectList);
+                ViewBag.database = selectItemList;
+                return View(list.ToList());
+            }
+            else
+            {
+                return Content("没有权限");
+            }
+
         }
         [Authorize]
-        public ActionResult Create(List<TimeSheetCreateDto> timeSheetCreateDto)
+        public ActionResult Create(List<TimeSheetCreateDto> timeSheetCreateDto )
         {
-            var list = _TimeSheet.Where(p => p.Id != Guid.Empty).ToList();
-            list = list.Where(p => p.ApproveStatusEnum == ApproveStatusEnum.UnApprove).ToList();
-            var del = _TimeSheet.RemoveRangeAsync(list).Result;
-            var s = _TimeSheetDetailService.CreateAsync(timeSheetCreateDto).Result;
+           
+           
+            var s = _TimeSheetDetailService.CreateAsync(timeSheetCreateDto, UserName).Result;
             return RedirectToAction("Index");
         }
 
@@ -73,5 +108,7 @@ namespace Nolan.HK.MVC.Controllers
             return RedirectToAction("Index");
         }
     }
+
+
 
 }

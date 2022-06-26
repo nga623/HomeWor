@@ -41,70 +41,47 @@
             header: { abc: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2NGIxYTg5Zi00MmExLTRlNzUtYmMzNy0zZTdkOGExMmViZDUiLCJuYW1lIjoiYWRtaW4iLCJVc2VyVHlwZUVudW0iOjAsIm5iZiI6MTY1NjA5ODY2NywiZXhwIjoxNjU2MDk4NjY3LCJpc3MiOiJqd3RJc3N1ZXJ0ZXN0IiwiYXVkIjoiand0QXVkaWVuY2V0ZXN0In0.CqzzWfuLpk30fXpDrRYVva1JFOj7NORj4zHQz0WmCBg" }
         });
         $("#submit").click(function () {
-            var form = $(this).parents('form');
-            var result = [];
+
             var name = $("#Name").val();
             var password = $("#Password").val();
-
-            result.push({
-                Name: name,
-                Password: password
+            $.ajax({
+                url: "User/Login",
+                contentType: "application/json;charset=utf-8",
+                type: "post",
+                data: JSON.stringify({
+                    Name: name,
+                    Password: password
+                }),
+               
+                success: function (data) {
+                    sessionStorage.setItem("key", data);
+                    window.location.href = "/TimeCard/Intail";
+                } 
             });
 
-            $.post("/User/Login", {
-                userDto: result,
-            }, function (data) {
-                sessionStorage.setItem("key", data);
-                var token = sessionStorage.getItem("key");
-
-                var token = "Bearer " + sessionStorage.getItem("key");
-                $.ajax({
-                    url: "/TimeCard/Intail",
-                    type: 'get',
-                    async: false,//同步
-                    //data: JSON.stringify({data:{status: "start"}}),
-                    data: { timeSheetCreateDto: result },
-                    cache: false,
-                    headers: {
-                        "Authorization": token,
-                        'Content-Type': 'application/x-www-form-urlencoded'  //multipart/form-data;boundary=--xxxxxxx   application/json
-                    },
-                    beforeSend: function (xhr) { //可以设置自定义标头
-                        xhr.setRequestHeader('Authorization', token);
-                    },
-                    success: function (res) {
-                         
-                        window.location.href = "/TimeCard/Index";
-                       
-                    },
-                    error: function (e) {
-                        alert("没有权限");
-                    }
-                });
+             
 
 
-                //if (token) {
-                //    $.ajaxSetup({ //发送请求前触发
-                //        beforeSend: function (xhr) { //可以设置自定义标头
-                //            xhr.setRequestHeader('Authorization', "Bearer " + token);
-                //        },
-                //        complete: function (xhr, status) {
+            //var obj = JSON.stringify({ 'Name': name, 'Password': password });
+            //$.ajax({
+            //    type: "post",
+            //    contentType: "application/json;charset=utf-8",
+            //    url: "/User/Login",
+            //    data: JSON.stringify({
+            //        Name: name,
+            //        Password: password
+            //    }),
+            //    success: function (data) {
+            //        sessionStorage.setItem("key", data);
+            //        window.location.href = "/TimeCard/Intail";
+            //    }
+            //});
 
-                //            window.location.href = "/TimeCard/index";
-                //            //var res = JSON.parse(xhr.responseText);
-                //            //if (res.status == 401) {//未登录
+            
 
-                //            //}
-
-                //        }
-                //    })
-                //} else {
-                //    var host_url = window.location.host;
-                //    window.location.replace("http://" + host_url);
-                //}
-
-            });
         });
+
+
     });
 
 </script>

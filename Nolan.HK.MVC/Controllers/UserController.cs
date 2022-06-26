@@ -99,30 +99,25 @@ namespace Nolan.HK.MVC.Controllers
 
             return jwtToken;
         }
-        
-        public ActionResult Login(UserDto userDto)
+        [HttpPost]
+        public ActionResult Login( [FromBody] UserDto userDto)
         {
             string token = "";
             try
             {
-                userDto.Name = "admin";
-                userDto.Password = "1";
-                var r = _UserService.LoginAsync(userDto).Result;
-                if (r)
+                var user = _UserService.LoginAsync(userDto).Result;
+                if (user!=null)
                 {
-                    
-                    token = GetToken(userDto);
-                    //return RedirectToAction("Index", "TimeCard");
+                    token = GetToken(user);
                 }
                 else
                 {
-                  //  return Content(@"login faild!");
+                    return Content("密码错误");
                 }
 
             }
             catch
             {
-              //  return View();
             }
             return Content(token);
         }

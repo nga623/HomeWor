@@ -8,5 +8,7 @@ namespace Nolan.HK.Application.Contracts.Dtos
 {
    public class TimeSheetSearchDto
     {
+        public string User { get; set; }
+        public int UserType { get; set; }
     }
 }
