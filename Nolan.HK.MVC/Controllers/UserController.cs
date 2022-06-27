@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Nolan.Domain.Shared.ConfigModels;
 using Nolan.HK.Application.Contracts.Dtos;
 using Nolan.HK.Application.Contracts.Services;
+using Nolan.WebApi.Shared.Filters;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -13,12 +17,18 @@ namespace Nolan.HK.MVC.Controllers
     public class UserController : Controller
     {
         private readonly IUserService _UserService;
+        private readonly ILogger<UserController> _logger;
+        IOptions<JwtSetting> _settings;
         public UserController
             (
               IUserService userService
+            , ILogger<UserController> logger
+            ,  IOptions<JwtSetting> settings
             )
         {
             _UserService = userService;
+            _logger = logger;
+            _settings = settings;
         }
         public ActionResult Index()
         {
@@ -29,7 +39,8 @@ namespace Nolan.HK.MVC.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult Create(UserDto userDto)
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(  UserDto userDto)
         {
             try
             {
@@ -58,9 +69,9 @@ namespace Nolan.HK.MVC.Controllers
     new Claim("UserTypeEnum", user.UserTypeEnum.ToString(),ClaimValueTypes.Integer32) // 是否是管理员
             };
             var _jwtSetting = new JwtSetting();
-            _jwtSetting.SecurityKey = "d0ecd23c-dfdb-4005-a2ea-0fea210c858a";
-            _jwtSetting.Issuer = "jwtIssuertest";
-            _jwtSetting.Audience = "jwtAudiencetest";
+            _jwtSetting.SecurityKey =_settings.Value.SecurityKey;
+            _jwtSetting.Issuer = _settings.Value.Issuer;
+            _jwtSetting.Audience = _settings.Value.Audience;
             var algorithm = SecurityAlgorithms.HmacSha256;
             var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSetting.SecurityKey));
             var signingCredentials = new SigningCredentials(secretKey, algorithm);
@@ -77,12 +88,17 @@ namespace Nolan.HK.MVC.Controllers
             return jwtToken;
         }
         [HttpPost]
+        [LogFilter]
         public ActionResult Login( [FromBody] UserDto userDto)
         {
+           
+            _logger.LogError("这是错误信息");
+            _logger.LogInformation("这是提示信息");
             string token = "";
             try
             {
                 var user = _UserService.LoginAsync(userDto).Result;
+               var s= user.Address;
                 if (user!=null)
                 {
                     token = GetToken(user);
@@ -94,6 +110,7 @@ namespace Nolan.HK.MVC.Controllers
             }
             catch
             {
+              
             }
             return Content(token);
         }

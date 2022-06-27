@@ -30,9 +30,14 @@ namespace Nolan.HK.Application.Services
 
         public List<TimeSheetDto> GetListAsync(TimeSheetSearchDto input)
         {
-            var cureetUser = _User.Where(p => p.Id != Guid.Empty && p.Name == input.User).FirstOrDefault();
-            var list = _TimeSheet.Where(p => p.Id != Guid.Empty).Include(p=>p.User)
-                .Include(p => p.ListTimeSheetDetails.OrderBy(p => p.Date)).ThenInclude(p=>p.User)
+            var cureetUser = _User
+                .Where(p => p.Id != Guid.Empty && p.Name == input.User)
+                .FirstOrDefault();
+            var list = _TimeSheet.Where(p => p.Id != Guid.Empty)
+                .Include(p => p.User)
+                .Include(p=>p.Project)
+                .Include(p => p.ListTimeSheetDetails.OrderBy(p => p.Date))
+                .ThenInclude(p => p.User)
                 .OrderBy(p => p.CreateTime)
                 .ToList();
             if (input.UserType == 0)

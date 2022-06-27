@@ -7,6 +7,8 @@ using Nolan.HK.Application.Contracts.Services;
 using Nolan.HK.Domain.Entities;
 using Nolan.Infra.EfCore.PostGresSql;
 using Nolan.Infra.Repository.IRepositories;
+using Nolan.WebApi.Shared.Extensions;
+using Nolan.WebApi.Shared.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;

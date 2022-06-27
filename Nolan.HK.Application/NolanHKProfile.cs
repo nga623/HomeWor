@@ -15,27 +15,29 @@ namespace Nolan.HK.Application
     {
         public NolanHKProfile()
         {
-            //CreateMap<CustomerclueRecycle, CustomerclueRecycleDto>()
-            //.ForMember(
-            //  d => d.HighSeasName, opt =>
-            //  {
-            //      opt.MapFrom(s => s.HighSeas.HighSeasName);
-            //  });
+
             CreateMap<TimeSheetDetailCreateDto, TimeSheetDetail>().ReverseMap();
             CreateMap<TimeSheetDetail, TimeSheetDetailDto>().ReverseMap();
             CreateMap<TimeSheetCreateDto, TimeSheet>().ReverseMap();
-           
+
             CreateMap<TimeSheetDetail, TimeSheetDetailDto>()
                 .ForMember(
               d => d.UserName, opt =>
               {
                   opt.MapFrom(s => s.User.Name);
-              }); 
-            CreateMap<TimeSheet, TimeSheetDto>().ForMember(
+              });
+            CreateMap<TimeSheet, TimeSheetDto>()
+               .ForMember(
               d => d.UserName, opt =>
               {
                   opt.MapFrom(s => s.User.Name);
-              });
+              })
+               .ForMember(
+              d => d.ProjectName, opt =>
+              {
+                  opt.MapFrom(s => s.Project.ProjectName);
+              })
+                ;
             CreateMap<User, UserDto>().ReverseMap();
         }
     }

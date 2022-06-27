@@ -10,8 +10,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Nolan.Application.Shared;
+using Nolan.Domain.Shared.ConfigModels;
 using Nolan.Infra.EfCore.PostGresSql;
 using Nolan.WebApi.Shared;
+using Nolan.WebApi.Shared.Filters;
+using Nolan.WebApi.Shared.Log;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -34,29 +37,33 @@ namespace Nolan.HK.MVC
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //SecurityKey Issuer Audience
-            var jwtSetting = new JwtSetting();
-            jwtSetting.SecurityKey = "d0ecd23c-dfdb-4005-a2ea-0fea210c858a";
-            jwtSetting.Issuer = "jwtIssuertest";
-            jwtSetting.Audience = "jwtAudiencetest";
-            Configuration.Bind("JwtSetting", jwtSetting);
-            services
-              .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-              .AddJwtBearer(options =>
+            _services = services;
+           
+            services.Configure<JwtSetting>(option =>
+            {
+                option.SecurityKey = Configuration["JwtSetting:SecurityKey"];
+                option.Issuer = Configuration["JwtSetting:Issuer"];
+                option.Audience = Configuration["JwtSetting:Audience"];
+               
+            });
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
               {
                   options.TokenValidationParameters = new TokenValidationParameters
                   {
                       ValidateIssuer = false,
                       ValidateActor=false,
                       ValidateAudience=false,
-                      ValidIssuer = jwtSetting.Issuer,
-                      ValidAudience = jwtSetting.Audience,
-                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSetting.SecurityKey)),
+                      ValidIssuer = Configuration["JwtSetting:Issuer"],
+                      ValidAudience = Configuration["JwtSetting:Audience"],
+                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSetting:SecurityKey"])),
                       // 默认允许 300s  的时间偏移量，设置为0
                       ClockSkew = TimeSpan.Zero
                   };
               });
-            _services = services;
+
+          
             services.AddDbContext<HomeWorkContext>(
                 options =>
            options.UseNpgsql(Configuration.GetConnectionString("HomeWorkContext"), optionsBuilder =>
@@ -66,6 +73,8 @@ namespace Nolan.HK.MVC
            );
             services.AddControllersWithViews();
             services.AddHttpContextAccessor();
+            services.AddControllers(options => options.Filters.Add(typeof(CustomerGlobalExceptionFilterAsync)));
+            services.AddSingleton<INLogHelper, NLogHelper>();
         }
         public void ConfigureContainer(ContainerBuilder builder)
         {
@@ -115,21 +124,5 @@ namespace Nolan.HK.MVC
             });
         }
     }
-    public class AutofacUtil
-    {
-        /// <summary>
-        /// Autofac依赖注入静态服务
-        /// </summary>
-        public static ILifetimeScope Container { get; set; }
-
-        /// <summary>
-        /// 获取服务(Single)
-        /// </summary>
-        /// <typeparam name="T">接口类型</typeparam>
-        /// <returns></returns>
-        public static T GetService<T>() where T : class
-        {
-            return Container.Resolve<T>();
-        }
-    }
+     
 }
