@@ -6,7 +6,7 @@
 <br />
 <br />
 
-<form action="@Url.Action("Create")" >
+<form action="@Url.Action("Create")">
     <div class="form-group">
 
         <p>
@@ -31,19 +31,19 @@
                     </td>
                     @foreach (var item in timeSheet.ListTimeSheetDetails)
                     {
-                <td>
+                        <td>
 
-                    <div>@Html.DisplayFor(modelItem => item.Date)</div>
-                    <p>@Html.DisplayFor(modelItem => item.Weekday)</p>
-                    <input type='text' name='TimesheetCount' class='form-control' value=@Html.DisplayFor(modelItem => item.TimesheetCount) />
-                </td>
+                            <div>@Html.DisplayFor(modelItem => item.Date)</div>
+                            <p>@Html.DisplayFor(modelItem => item.Weekday)</p>
+                            <input type='text' name='TimesheetCount' class='form-control' value=@Html.DisplayFor(modelItem => item.TimesheetCount) />
+                        </td>
                     }
                     <td style="vertical-align: bottom; width: 100px">
                         @if (timeSheet.UserType == 1)
-                        { 
-                        <a asp-action="Delete" class="btn btn-primary" asp-route-id="@timeSheet.Id">Delete</a>
+                        {
+                            <a asp-action="Delete" class="btn btn-primary" asp-route-id="@timeSheet.Id">Delete</a>
                         }
-                        
+
                     </td>
                 </tr>
             }
@@ -55,10 +55,7 @@
 <script>
 
     $(function () {
-        var token = "Bearer " + sessionStorage.getItem("key");
-        $.ajaxSetup({
-            header: { Authorization: token }
-        });
+
         function DateRange(value) {
             var startDate = "";
             var year, week, date;
@@ -130,8 +127,8 @@
         $("#Create").click(function () {
 
             var first = DateRange($("#week").val()); //获取周日历起始截止日期
-           
-            
+
+
             var tempTd = "";
             var firstDay = "";
             for (var i = 0; i < 7; i++) {
@@ -206,29 +203,8 @@
                 }
 
             });
-            //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2NGIxYTg5Zi00MmExLTRlNzUtYmMzNy0zZTdkOGExMmViZDUiLCJuYW1lIjoiYWRtaW4iLCJVc2VyVHlwZUVudW0iOjAsIm5iZiI6MTY1NjA5ODY2NywiZXhwIjoxNjU2MDk4NjY3LCJpc3MiOiJqd3RJc3N1ZXJ0ZXN0IiwiYXVkIjoiand0QXVkaWVuY2V0ZXN0In0.CqzzWfuLpk30fXpDrRYVva1JFOj7NORj4zHQz0WmCBg
-            //$.post(form.attr('action'), {
-            //    timeSheetCreateDto: result,
-            //}, function (data) {
-            //    location.reload();
-            //});
-            //$.ajax({
-            //    type: "post",
-            //    timeout: 10000, // 超时时间 10 秒
-            //    headers: {
-            //        'abc': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2NGIxYTg5Zi00MmExLTRlNzUtYmMzNy0zZTdkOGExMmViZDUiLCJuYW1lIjoiYWRtaW4iLCJVc2VyVHlwZUVudW0iOjAsIm5iZiI6MTY1NjA5ODY2NywiZXhwIjoxNjU2MDk4NjY3LCJpc3MiOiJqd3RJc3N1ZXJ0ZXN0IiwiYXVkIjoiand0QXVkaWVuY2V0ZXN0In0.CqzzWfuLpk30fXpDrRYVva1JFOj7NORj4zHQz0WmCBg"
-            //    },
-            //    url: "/TimeCard/Create",
-            //    data: data,
-            //    success: function (data) {
-            //        location.reload();
-            //    },
-            //    error: function (err) {
-            //    },
-            //    complete: function (XMLHttpRequest, status) { //请求完成后最终执行参数　
-            //    }
-            //})
-           var token ="Bearer " +sessionStorage .getItem("key");
+
+            var token = "Bearer " + sessionStorage.getItem("key");
             $.ajax({
                 url: "/TimeCard/Create",
                 type: 'post',
@@ -241,14 +217,24 @@
                     'Content-Type': 'application/x-www-form-urlencoded'  //multipart/form-data;boundary=--xxxxxxx   application/json
                 },
                 success: function (res) {
-                     
-                } 
+
+                }
             });
 
             return false;
         });
+        $("#logout").click(function () {
+            $.ajax({
+                url: "/TimeCard/Logout",
+                type: 'get',
+                dataType: 'json',
+                success: function (res) {
+                    window.location.href = "/User/Index";
+                }
+            });
 
+        });
     });
-     
-  
+
+
 </script>

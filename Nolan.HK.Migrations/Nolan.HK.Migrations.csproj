@@ -33,4 +33,8 @@
     <ProjectReference Include="..\Nolan.Infra.EfCore.PostGresSql\Nolan.Infra.EfCore.PostGresSql.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Nolan.HK.Migrations.Migrations
 {
     [DbContext(typeof(HomeWorkContext))]
-    [Migration("20220622092428_c2")]
-    partial class c2
+    [Migration("20220627015847_c12")]
+    partial class c12
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -59,9 +59,14 @@ namespace Nolan.HK.Migrations.Migrations
                     b.Property<int>("TotalCount")
                         .HasColumnType("integer");
 
+                    b.Property<Guid>("Userid")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ProjectID");
+
+                    b.HasIndex("Userid");
 
                     b.ToTable("TimeSheet");
                 });
@@ -148,7 +153,15 @@ namespace Nolan.HK.Migrations.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Nolan.HK.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("Userid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Project");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Nolan.HK.Domain.Entities.TimeSheetDetail", b =>

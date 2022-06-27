@@ -107,6 +107,14 @@ namespace Nolan.HK.MVC.Controllers
             var s = _TimeSheet.RemoveAsync(model).Result;
             return RedirectToAction("Index");
         }
+
+
+        public ActionResult Logout()
+        {
+            UserName = null;
+            UserType = null;
+            return Json(null);
+        }
     }
 
 

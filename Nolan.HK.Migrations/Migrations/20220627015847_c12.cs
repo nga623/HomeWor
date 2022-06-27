@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Nolan.HK.Migrations.Migrations
 {
-    public partial class c1 : Migration
+    public partial class c12 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -17,22 +17,6 @@ namespace Nolan.HK.Migrations.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Project", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TimeSheet",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    TotalCount = table.Column<int>(type: "integer", nullable: false),
-                    ApproveTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ApproveStatusEnum = table.Column<int>(type: "integer", nullable: false),
-                    ApproveStatus = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TimeSheet", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -52,6 +36,36 @@ namespace Nolan.HK.Migrations.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_User", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TimeSheet",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    TotalCount = table.Column<int>(type: "integer", nullable: false),
+                    ApproveTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ApproveStatusEnum = table.Column<int>(type: "integer", nullable: false),
+                    ApproveStatus = table.Column<string>(type: "text", nullable: true),
+                    ProjectID = table.Column<Guid>(type: "uuid", nullable: false),
+                    Userid = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TimeSheet", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TimeSheet_Project_ProjectID",
+                        column: x => x.ProjectID,
+                        principalTable: "Project",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TimeSheet_User_Userid",
+                        column: x => x.Userid,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -91,6 +105,16 @@ namespace Nolan.HK.Migrations.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_TimeSheet_ProjectID",
+                table: "TimeSheet",
+                column: "ProjectID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TimeSheet_Userid",
+                table: "TimeSheet",
+                column: "Userid");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TimeSheetDetail_ProjectID",
                 table: "TimeSheetDetail",
                 column: "ProjectID");
@@ -112,10 +136,10 @@ namespace Nolan.HK.Migrations.Migrations
                 name: "TimeSheetDetail");
 
             migrationBuilder.DropTable(
-                name: "Project");
+                name: "TimeSheet");
 
             migrationBuilder.DropTable(
-                name: "TimeSheet");
+                name: "Project");
 
             migrationBuilder.DropTable(
                 name: "User");

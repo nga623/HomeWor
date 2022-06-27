@@ -37,11 +37,8 @@
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script>
     $(function () {
-        $.ajaxSetup({
-            header: { abc: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2NGIxYTg5Zi00MmExLTRlNzUtYmMzNy0zZTdkOGExMmViZDUiLCJuYW1lIjoiYWRtaW4iLCJVc2VyVHlwZUVudW0iOjAsIm5iZiI6MTY1NjA5ODY2NywiZXhwIjoxNjU2MDk4NjY3LCJpc3MiOiJqd3RJc3N1ZXJ0ZXN0IiwiYXVkIjoiand0QXVkaWVuY2V0ZXN0In0.CqzzWfuLpk30fXpDrRYVva1JFOj7NORj4zHQz0WmCBg" }
-        });
+         
         $("#submit").click(function () {
-
             var name = $("#Name").val();
             var password = $("#Password").val();
             $.ajax({
