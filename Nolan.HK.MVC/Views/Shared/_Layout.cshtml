@@ -11,13 +11,16 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                 
-               
-                <a class="navbar-brand"  >TimeCard Manager</a>
-        
-              
-            
-        
+
+
+                <a class="navbar-brand">TimeCard Manager</a>
+                @if (@ViewBag.UserName != null)
+                {
+                    <input style=" float: right;" type="button" id="logout" class="btn btn-primary" value="Logout" />
+                }
+
+
+
             </div>
         </nav>
     </header>

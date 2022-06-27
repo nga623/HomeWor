@@ -21,7 +21,7 @@
             <input value="2022-W25" type="week" id="week" class="btn btn-primary" />
             <input style="margin-left: 10px; margin-right: 10px; float: right; width: 180px "     type="submit" id="submit" value="Submit" class="btn btn-primary" />
         }
-         <input style=" float: right;" type="button" id="logout" class="btn btn-primary" value="Logout" />
+         
     </div>
     @Html.DropDownList("database-dropdownlist", ViewBag.database as IEnumerable<SelectListItem>, new { @id = "tempSel", @class = "btn btn-success dropdown-toggle form-control display", @style = "display:none" })
     <table class="table" id="timecard">
