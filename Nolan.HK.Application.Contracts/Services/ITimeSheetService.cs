@@ -10,7 +10,7 @@ namespace Nolan.HK.Application.Contracts.Services
      
     public interface ITimeSheetService
     {
-        Task<int> CreateAsync(List<TimeSheetDto> input);
+        
         List<TimeSheetDto> GetListAsync(TimeSheetSearchDto input);
     }
 }

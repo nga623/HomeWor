@@ -27,10 +27,6 @@ namespace Nolan.HK.Application.Services
             _TimeSheetDetail = timeSheetDetail;
             _User = user;
         }
-        public Task<int> CreateAsync(List<TimeSheetDto> input)
-        {
-            throw new NotImplementedException();
-        }
 
         public List<TimeSheetDto> GetListAsync(TimeSheetSearchDto input)
         {
@@ -40,13 +36,9 @@ namespace Nolan.HK.Application.Services
             {
                 list = _TimeSheet.Where(p => p.ApproveStatusEnum == ApproveStatusEnum.UnApprove && p.Userid == cureetUser.Id).ToList();
             }
-            
-            //foreach (var item in list)
-            //{
-            //    var listDetail = _TimeSheetDetail.Where(p => p.TimesheetID == item.Id).ToList();
-            //    item.ListTimeSheetDetails = listDetail;
-            //}
-            return Mapper.Map<List<TimeSheetDto>>(list);
+            var listDto = Mapper.Map<List<TimeSheetDto>>(list);
+            listDto.ForEach(p => p.UserType = Convert.ToInt32(input.UserType));
+            return listDto;
         }
     }
 }

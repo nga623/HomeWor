@@ -29,12 +29,9 @@ namespace Nolan.HK.Domain.Services
         }
         public async Task<int> CreateAsync(List<TimeSheet> input, string userName)
         {
-            var listUser = _User.Where(p => p.Name != null).ToList();
-            var user = listUser.Where(p => p.Name == userName).FirstOrDefault();
-
-            var listSheet = _TimeSheet.Where(p => p.Id != Guid.Empty).ToList();
-            listSheet = listSheet.Where(p => p.ApproveStatusEnum == ApproveStatusEnum.UnApprove&&p.Userid==user.Id).ToList();
-            var del = _TimeSheet.RemoveRangeAsync(listSheet).Result;
+            var user = _User.Where(p => p.Name == userName).FirstOrDefault();
+            var listSheet = _TimeSheet.Where(p => p.ApproveStatusEnum == ApproveStatusEnum.UnApprove && p.Userid == user.Id).ToList();
+            await _TimeSheet.RemoveRangeAsync(listSheet);
 
             foreach (var item in input)
             {
@@ -56,10 +53,7 @@ namespace Nolan.HK.Domain.Services
             }
             return 1;
         }
-        public List<TimeSheetDetail> GetListAsync(TimeSheetDetailSearchDto input)
-        {
-            return _TimeSheetDetailManager.Where(p => p.TimesheetCount != 0).ToList();
-        }
+         
     }
 
 }
