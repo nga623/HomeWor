@@ -27,8 +27,8 @@ namespace Nolan.HK.Application.Services
         {
             var user = Mapper.Map<User>(input);
             user.Id = Guid.NewGuid();
-            var listUser = _User.Where(p => p.Id != Guid.Empty).ToList();
-            var hasUser = listUser.Where(p => p.Name == input.Name).FirstOrDefault();
+            var hasUser = _User.Where(p => p.Name ==input.Name).FirstOrDefault();
+           // var hasUser = listUser.Where(p => p.Name == input.Name).FirstOrDefault();
             if (hasUser == null)
             {
                 return await _User.InsertAsync(user);
