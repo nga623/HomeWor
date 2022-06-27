@@ -10,7 +10,7 @@ using Nolan.Infra.Repository.IRepositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Threading.Tasks;
 
 namespace Nolan.HK.MVC.Controllers
 {
@@ -74,6 +74,7 @@ namespace Nolan.HK.MVC.Controllers
                 selectItemList.AddRange(selectList);
                 ViewBag.database = selectItemList;
                 ViewBag.UserType = UserType;
+                ViewBag.UserName = UserName;
                 return View(list.ToList());
             }
             else
@@ -86,7 +87,7 @@ namespace Nolan.HK.MVC.Controllers
         public ActionResult Create(List<TimeSheetCreateDto> timeSheetCreateDto)
         {
             var s = _TimeSheetService.CreateAsync(timeSheetCreateDto, UserName).Result;
-            return    Json ("ok");
+            return Json("ok");
         }
 
         [HttpGet]
@@ -96,7 +97,12 @@ namespace Nolan.HK.MVC.Controllers
             var s = _TimeSheet.RemoveAsync(model).Result;
             return RedirectToAction("Index");
         }
-
+        [HttpGet]
+        public async Task<ActionResult<int>> AuditTimeCard(Guid id)
+        {
+            await _TimeSheetService.AuditTimeCard(id);
+            return RedirectToAction("Index");
+        }
         public ActionResult Logout()
         {
             UserName = null;

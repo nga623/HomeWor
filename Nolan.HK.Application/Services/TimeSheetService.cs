@@ -33,7 +33,7 @@ namespace Nolan.HK.Application.Services
             var cureetUser = _User.Where(p => p.Id != Guid.Empty && p.Name == input.User).FirstOrDefault();
             var list = _TimeSheet.Where(p => p.Id != Guid.Empty)
                 .Include(p => p.ListTimeSheetDetails.OrderBy(p => p.Date))
-                .OrderBy(p =>p.CreateTime)
+                .OrderBy(p => p.CreateTime)
                 .ToList();
             if (input.UserType == 0)
             {
@@ -70,5 +70,14 @@ namespace Nolan.HK.Application.Services
             }
             return 1;
         }
+
+        public async Task<int> AuditTimeCard(Guid id)
+        {
+            var model = await _TimeSheet.GetAsync(id);
+            model.ApproveStatusEnum = ApproveStatusEnum.Approve;
+            model.ApproveStatus = ApproveStatusEnum.Approve.ToString();
+            return await _TimeSheet.UpdateAsync(model);
+        }
+
     }
 }

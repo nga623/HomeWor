@@ -24,6 +24,10 @@ namespace Nolan.HK.MVC.Controllers
         {
             return View();
         }
+        public ActionResult Registered()
+        {
+            return View();
+        }
         [HttpPost]
         public ActionResult Create(UserDto userDto)
         {

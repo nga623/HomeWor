@@ -13,5 +13,6 @@ namespace Nolan.HK.Application.Contracts.Services
         
         List<TimeSheetDto> GetListAsync(TimeSheetSearchDto input);
         Task<int> CreateAsync(List<TimeSheetCreateDto> input, string userName);
+        Task<int> AuditTimeCard(Guid id);
     }
 }
