@@ -1,54 +1,29 @@
-﻿using Castle.Core.Configuration;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Nolan.HK.Application.Contracts.Dtos;
 using Nolan.HK.Application.Contracts.Services;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
+ 
  
 namespace Nolan.HK.MVC.Controllers
 {
     public class UserController : Controller
     {
-      //  private readonly IConfiguration _configuration;
         private readonly IUserService _UserService;
         public UserController
             (
-             //IConfiguration configuration
               IUserService userService
             )
         {
-           // _configuration = configuration;
             _UserService = userService;
         }
-        // GET: UserController
         public ActionResult Index()
         {
             return View();
         }
-
-        // GET: UserController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: UserController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-        public ActionResult Registered()
-        {
-            return View();
-        }
-        // POST: UserController/Create
         [HttpPost]
         public ActionResult Create(UserDto userDto)
         {
@@ -94,9 +69,7 @@ namespace Nolan.HK.MVC.Controllers
               notBefore: DateTime.Now,
               expires: DateTime.Now.AddSeconds(10000000)
             );
-
             string jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
-
             return jwtToken;
         }
         [HttpPost]
@@ -112,55 +85,14 @@ namespace Nolan.HK.MVC.Controllers
                 }
                 else
                 {
-                    return Content("密码错误");
+                    return Content("nopass");
                 }
-
             }
             catch
             {
             }
             return Content(token);
         }
-        // GET: UserController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: UserController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: UserController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: UserController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        
     }
 }

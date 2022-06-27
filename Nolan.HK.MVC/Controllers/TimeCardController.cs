@@ -61,7 +61,6 @@ namespace Nolan.HK.MVC.Controllers
         public static string UserName;
         public static string UserType;
 
-
         public IActionResult Index()
         {
 
@@ -107,7 +106,6 @@ namespace Nolan.HK.MVC.Controllers
             var s = _TimeSheet.RemoveAsync(model).Result;
             return RedirectToAction("Index");
         }
-
 
         public ActionResult Logout()
         {
