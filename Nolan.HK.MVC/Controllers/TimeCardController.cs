@@ -67,12 +67,13 @@ namespace Nolan.HK.MVC.Controllers
                 timeSheetSearchDto.User = UserName;
                 timeSheetSearchDto.UserType = Convert.ToInt32(UserType);
                 var list = _TimeSheetService.GetListAsync(timeSheetSearchDto);
-                 
+
                 var projectList = _Project.Where(p => p.ProjectName != "").ToList();
                 var selectItemList = new List<SelectListItem>();
                 var selectList = new SelectList(projectList, "Id", "ProjectName");
                 selectItemList.AddRange(selectList);
                 ViewBag.database = selectItemList;
+                ViewBag.UserType = UserType;
                 return View(list.ToList());
             }
             else
@@ -82,10 +83,10 @@ namespace Nolan.HK.MVC.Controllers
 
         }
         [Authorize]
-        public ActionResult Create(List<TimeSheetCreateDto> timeSheetCreateDto )
+        public ActionResult Create(List<TimeSheetCreateDto> timeSheetCreateDto)
         {
-            var s = _TimeSheetDetailService.CreateAsync(timeSheetCreateDto, UserName).Result;
-            return RedirectToAction("Index");
+            var s = _TimeSheetService.CreateAsync(timeSheetCreateDto, UserName).Result;
+            return    Json ("ok");
         }
 
         [HttpGet]

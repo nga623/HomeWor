@@ -27,32 +27,7 @@ namespace Nolan.HK.Domain.Services
             _TimeSheet = timeSheet;
             _User = user;
         }
-        public async Task<int> CreateAsync(List<TimeSheet> input, string userName)
-        {
-            var user = _User.Where(p => p.Name == userName).FirstOrDefault();
-            var listSheet = _TimeSheet.Where(p => p.ApproveStatusEnum == ApproveStatusEnum.UnApprove && p.Userid == user.Id).ToList();
-            await _TimeSheet.RemoveRangeAsync(listSheet);
-
-            foreach (var item in input)
-            {
-                var count = item.ListTimeSheetDetails.Sum(p => p.TimesheetCount);
-                item.Id = Guid.NewGuid();
-                item.TotalCount = count;
-                item.Userid = user.Id;
-                item.CreateTime = DateTime.Now;
-                item.ApproveStatusEnum = Enum.ApproveStatusEnum.UnApprove;
-                item.ApproveStatus = Enum.ApproveStatusEnum.UnApprove.ToString();
-                foreach (var detail in item.ListTimeSheetDetails)
-                {
-                    detail.Id = Guid.NewGuid();
-                    detail.ProjectID = item.ProjectID;
-                    detail.Userid = user.Id;
-                    detail.TimesheetID = item.Id;
-                }
-                await _TimeSheet.InsertAsync(item);
-            }
-            return 1;
-        }
+         
          
     }
 

@@ -12,7 +12,12 @@
         <p>
             <input type="button" id="Create" class="btn btn-primary" value="Create" />
             <input value="2022-W25" type="week" id="week" class="btn btn-primary" />
-            <input style=" float:right;width:200px" type="submit" id="submit" value="submit" class="btn btn-primary" />
+            <input style=" float:right;width:200px" type="button" id="logout" class="btn btn-primary" value="logout" />
+            @if (ViewBag.UserType == "0")
+            {
+                <input style=" float:right;width:200px" type="submit" id="submit" value="submit" class="btn btn-primary" />
+            }
+
         </p>
 
 
@@ -217,7 +222,8 @@
                     'Content-Type': 'application/x-www-form-urlencoded'  //multipart/form-data;boundary=--xxxxxxx   application/json
                 },
                 success: function (res) {
-
+                    
+                    alert("添加成功");
                 }
             });
 
@@ -229,7 +235,7 @@
                 type: 'get',
                 dataType: 'json',
                 success: function (res) {
-                    window.location.href = "/User/Index";
+                    window.location.href = "https://localhost:5001";
                 }
             });
 
