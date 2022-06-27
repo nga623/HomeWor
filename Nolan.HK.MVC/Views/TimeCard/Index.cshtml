@@ -9,20 +9,14 @@
 
 <form action="@Url.Action("Create")">
     <div class="form-group">
-
         <p>
             <input type="button" id="Create" class="btn btn-primary" value="Create" />
             <input value="2022-W25" type="week" id="week" class="btn btn-primary" />
-            
             @if (ViewBag.UserType == "0")
             {
                 <input style=" float:right;width:200px" type="submit" id="submit" value="submit" class="btn btn-primary" />
             }
-
         </p>
-
-
-
 
     </div>
     @Html.DropDownList("database-dropdownlist", ViewBag.database as IEnumerable<SelectListItem>, new { @id = "tempSel", @class = "btn btn-success dropdown-toggle form-control display", @style = "display:none" })
