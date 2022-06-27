@@ -52,7 +52,7 @@ namespace Nolan.Infra.EfCore.PostGresSql.Repositories
 
         public virtual IQueryable<TEntity> Where(Expression<Func<TEntity, bool>> expression, bool writeDb = false, bool noTracking = true)
         {
-            return DbContext.Set<TEntity>(); //this.GetDbSet(writeDb, noTracking).Where(expression);
+            return DbContext.Set<TEntity>().Where(expression); //this.GetDbSet(writeDb, noTracking).Where(expression);
         }
 
         /// <summary>

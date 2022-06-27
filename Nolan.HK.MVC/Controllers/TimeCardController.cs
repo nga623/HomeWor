@@ -63,7 +63,6 @@ namespace Nolan.HK.MVC.Controllers
 
         public IActionResult Index()
         {
-
             if (UserName != null)
             {
                 TimeSheetSearchDto timeSheetSearchDto = new TimeSheetSearchDto();
