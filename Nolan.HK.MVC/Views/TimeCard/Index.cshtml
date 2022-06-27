@@ -2,7 +2,7 @@
 
 
 <h1>Homework</h1> 当前登录人：@ViewBag.UserName
-<input style=" float:right;width:200px" type="button" id="logout" class="btn btn-primary" value="logout" />
+<input style=" float:right;width:200px" type="button" id="logout" class="btn btn-primary" value="Logout" />
 <br />
 <br />
 <br />
@@ -25,43 +25,45 @@
 
             @foreach (var timeSheet in Model)
             {
-            <tr>
+                <tr>
 
-                <td style="vertical-align: bottom; width: 100px">
+
                     @if (timeSheet.UserType == 1)
                     {
-                      @timeSheet.UserName
+                        <td style="vertical-align: bottom; width: 100px">
+                            @timeSheet.UserName
+                        </td>
                     }
 
-                </td>
-                <td style="vertical-align: bottom; width: 200px">
-                    @Html.DropDownList("database-dropdownlist", ViewBag.database as IEnumerable<SelectListItem>, new { @selected = timeSheet.ProjectID, @class = "btn btn-success dropdown-toggle form-control display", })
-                </td>
-                @foreach (var item in timeSheet.ListTimeSheetDetails)
-                {
-                    <td disabled="disabled">
 
-                        <div>@Html.DisplayFor(modelItem => item.Date)</div>
-                        <p>@Html.DisplayFor(modelItem => item.Weekday)</p>
-                        <input type='text' name='TimesheetCount' class='form-control' value=@Html.DisplayFor(modelItem => item.TimesheetCount) />
+                    <td style="vertical-align: bottom; width: 200px">
+                        @Html.DropDownList("database-dropdownlist", ViewBag.database as IEnumerable<SelectListItem>, new { @selected = timeSheet.ProjectID, @class = "btn btn-success dropdown-toggle form-control display", })
                     </td>
-                }
-                <td style="vertical-align: bottom; width: 100px">
-                    @if (timeSheet.UserType == 1)
+                    @foreach (var item in timeSheet.ListTimeSheetDetails)
                     {
-                        <a asp-action="Delete" class="btn btn-primary" asp-route-id="@timeSheet.Id">Delete</a>
+                        <td disabled="disabled">
+
+                            <div>@Html.DisplayFor(modelItem => item.Date)</div>
+                            <p>@Html.DisplayFor(modelItem => item.Weekday)</p>
+                            <input type='text' name='TimesheetCount' class='form-control' value=@Html.DisplayFor(modelItem => item.TimesheetCount) />
+                        </td>
                     }
+                    <td style="vertical-align: bottom; width: 100px">
+                        @if (timeSheet.UserType == 1)
+                        {
+                            <a asp-action="Delete" class="btn btn-primary" asp-route-id="@timeSheet.Id">Delete</a>
+                        }
 
-                </td>
+                    </td>
 
-                <td style="vertical-align: bottom; width: 100px">
-                    @if (timeSheet.UserType == 1)
-                    {
-                        <a asp-action="AuditTimeCard" class="btn btn-primary" asp-route-id="@timeSheet.Id">Audit</a>
-                    }
+                    <td style="vertical-align: bottom; width: 100px">
+                        @if (timeSheet.UserType == 1)
+                        {
+                            <a asp-action="AuditTimeCard" class="btn btn-primary" asp-route-id="@timeSheet.Id">Audit</a>
+                        }
 
-                </td>
-            </tr>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
@@ -185,7 +187,6 @@
             var tr = "<tr>" + select + tempTd + " </tr>";
             $("#timecard").append(tr);
         });
-
         $("#submit").click(function () {
             var form = $(this).parents('form');
             var result = [];
@@ -233,7 +234,7 @@
                     'Content-Type': 'application/x-www-form-urlencoded'  //multipart/form-data;boundary=--xxxxxxx   application/json
                 },
                 success: function (res) {
-                    
+
                     alert("添加成功");
                 }
             });
