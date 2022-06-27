@@ -17,5 +17,6 @@ namespace Nolan.HK.Application.Contracts.Dtos
 		public string Note { get; set; }
 		public Guid ProjectID { get; set; }
 		public Guid TimesheetID { get; set; }
+		public string UserName { get; set; }
 	}
 }

@@ -31,13 +31,21 @@
 
             @foreach (var timeSheet in Model)
             {
-            <tr  >
+            <tr>
+
+                <td style="vertical-align: bottom; width: 100px">
+                    @if (timeSheet.UserType == 1)
+                    {
+                      @timeSheet.UserName
+                    }
+
+                </td>
                 <td style="vertical-align: bottom; width: 200px">
                     @Html.DropDownList("database-dropdownlist", ViewBag.database as IEnumerable<SelectListItem>, new { @selected = timeSheet.ProjectID, @class = "btn btn-success dropdown-toggle form-control display", })
                 </td>
                 @foreach (var item in timeSheet.ListTimeSheetDetails)
                 {
-                    <td   disabled="disabled">
+                    <td disabled="disabled">
 
                         <div>@Html.DisplayFor(modelItem => item.Date)</div>
                         <p>@Html.DisplayFor(modelItem => item.Weekday)</p>
