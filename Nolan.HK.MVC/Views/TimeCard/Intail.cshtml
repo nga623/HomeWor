@@ -1,26 +1,17 @@
 ﻿ <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script>
-
-   
     var token = "Bearer " + sessionStorage.getItem("key");
     $.ajax({
         url: "/TimeCard/GetToken",
         type: 'post',
-        
-        //data: JSON.stringify({data:{status: "start"}}),
-        
         headers: {
             "Authorization": token,
             'Content-Type': 'application/x-www-form-urlencoded'  //multipart/form-data;boundary=--xxxxxxx   application/json
         },
         success: function () {
-            
                 window.location.href = "/TimeCard/index";
-            
         },
         error: function (e) {
-            
         }
     });
-
 </script>
