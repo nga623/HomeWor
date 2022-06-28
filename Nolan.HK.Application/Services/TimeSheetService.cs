@@ -34,33 +34,32 @@ namespace Nolan.HK.Application.Services
             var cureetUser = _userEntity
                 .Where(p => p.Id != Guid.Empty && p.Name == input.User)
                 .FirstOrDefault();
-            var list = await _timeSheetEntity.Where(p => p.Id != Guid.Empty)
+            var listTimeSheet = await _timeSheetEntity.Where(p => p.Id != Guid.Empty)
                 .Include(p => p.User)
                 .Include(p => p.Project)
                 .Include(p => p.ListTimeSheetDetails.OrderBy(p => p.Date))
                 .ThenInclude(p => p.User)
                 .OrderBy(p => p.CreateTime)
                 .ToListAsync();
-            if (input.UserType == 0 && cureetUser != null)
+            if (input.UserType ==(int)UserTypeEnum.staff && cureetUser != null)
             {
-                list = list.Where(p => p.ApproveStatusEnum == ApproveStatusEnum.UnApprove && p.Userid == cureetUser.Id).ToList();
+                listTimeSheet = listTimeSheet.Where(p => p.ApproveStatusEnum == ApproveStatusEnum.UnApprove && p.Userid == cureetUser.Id).ToList();
             }
-            var listDto = Mapper.Map<List<TimeSheetDto>>(list);
-            listDto.ForEach(p => p.UserType = Convert.ToInt32(input.UserType));
+            var listDto = Mapper.Map<List<TimeSheetDto>>(listTimeSheet);
             return listDto;
         }
 
         public async Task<int> CreateAsync(List<TimeSheetCreateDto> input, string userName)
         {
-            var list = Mapper.Map<List<TimeSheet>>(input);
+            var listTimeSheet = Mapper.Map<List<TimeSheet>>(input);
             var user = _userEntity.Where(p => p.Name == userName).FirstOrDefault();
-            var listSheet = _timeSheetEntity.Where(p => p.ApproveStatusEnum == ApproveStatusEnum.UnApprove && p.Userid == user.Id).ToList();
-            await _timeSheetEntity.RemoveRangeAsync(listSheet);
+            var listSheetRemove = _timeSheetEntity.Where(p => p.ApproveStatusEnum == ApproveStatusEnum.UnApprove && p.Userid == user.Id).ToList();
+            await _timeSheetEntity.RemoveRangeAsync(listSheetRemove);
             if (user == null)
             {
                 throw new Exception("user is not null");
             }
-            foreach (var item in list)
+            foreach (var item in listTimeSheet)
             {
                 var count = item.ListTimeSheetDetails.Sum(p => p.TimesheetCount);
                 item.Id = Guid.NewGuid();
@@ -76,9 +75,8 @@ namespace Nolan.HK.Application.Services
                     detail.Userid = user.Id;
                     detail.TimesheetID = item.Id;
                 }
-                await _timeSheetEntity.InsertAsync(item);
             }
-            return 1;
+            return await _timeSheetEntity.InsertRangeAsync(listTimeSheet);
         }
 
         public async Task<int> AuditTimeCard(Guid id)

@@ -37,6 +37,11 @@ namespace Nolan.HK.Application
               {
                   opt.MapFrom(s => s.Project.ProjectName);
               })
+                .ForMember(
+              d => d.UserType, opt =>
+              {
+                  opt.MapFrom(s =>(int) s.ApproveStatusEnum);
+              })
                 ;
             CreateMap<User, UserDto>().ReverseMap();
         }

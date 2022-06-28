@@ -20,7 +20,7 @@
             @foreach (var timeSheet in Model)
             {
                 <tr>
-                    @if (timeSheet.UserType == 1)
+                    @if (ViewBag.UserType == "1")
                     {
                         <td style="vertical-align: bottom; width: 100px">
                             <h5>@timeSheet.UserName</h5>
@@ -44,7 +44,7 @@
                             <input type='text' name='TimesheetCount' class='form-control' value=@Html.DisplayFor(modelItem => item.TimesheetCount) />
                         </td>
                     }
-                    @if (timeSheet.UserType == 1 && timeSheet.ApproveStatusEnum == 0)
+                    @if (ViewBag.UserType == "1" && timeSheet.ApproveStatusEnum == 0)
                     {
                         <td style="vertical-align: bottom; width: 100px">
                             <a asp-action="Delete" class="btn btn-primary" asp-route-id="@timeSheet.Id">Delete</a>
