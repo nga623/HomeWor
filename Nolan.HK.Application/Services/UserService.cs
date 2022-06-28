@@ -1,5 +1,4 @@
-﻿
-using Nolan.HK.Application.Contracts.Dtos;
+﻿using Nolan.HK.Application.Contracts.Dtos;
 using Nolan.HK.Application.Contracts.Services;
 using Nolan.HK.Domain.Entities;
 using Nolan.Infra.Repository.IRepositories;
@@ -16,53 +15,53 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Nolan.HK.Application.Services
 {
-
     public class UserService : AbstractAppService, IUserService
     {
-        private readonly IEfBasicRepository<User> _User;
+        private readonly IEfBasicRepository<User> _userEntity;
         IOptions<JwtSetting> _settings;
-        public UserService(
-            IEfBasicRepository<User> user
-           , IOptions<JwtSetting> settings
+        public UserService
+            (
+                IEfBasicRepository<User> userEntity
+              , IOptions<JwtSetting> settings
             )
         {
-            _User = user;
+            _userEntity = userEntity;
             _settings = settings;
         }
+
         public async Task<bool> CreateAsync(UserDto input)
         {
             var user = Mapper.Map<User>(input);
             user.Id = Guid.NewGuid();
-            var hasUser = _User.Where(p => p.Name == input.Name).FirstOrDefault();
-            if (hasUser == null)
+            var exitUser = _userEntity.Where(p => p.Name == input.Name).FirstOrDefault();
+            if (exitUser == null)
             {
-                return await _User.InsertAsync(user) > 0 ? true : false;
+                return await _userEntity.InsertAsync(user) > 0 ? true : false;
             }
             else
             {
-                throw new Exception("用户名重复");
-                 
+                throw new Exception("this username have registered");
             }
         }
 
         public async Task<string> LoginAsync(UserDto input)
         {
             await Task.Delay(100);
-            var user = _User.Where(p => p.Name == input.Name && p.Password == input.Password).FirstOrDefault();
+            var user = _userEntity.Where(p => p.Name == input.Name && p.Password == input.Password).FirstOrDefault();
             var returnDto = Mapper.Map<UserDto>(user);
             if (returnDto != null)
             {
-                return GetToken(returnDto);
+                return await GetToken(returnDto);
             }
             else
             {
-                throw new Exception("用户名密码错误");
+                throw new Exception("username or password is wrong");
             }
         }
 
-        public string GetToken(UserDto user)
+        public async Task<string> GetToken(UserDto user)
         {
-            //创建用户身份标识，可按需要添加更多信息
+            
             var claims = new Claim[]
             {
     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
@@ -76,7 +75,7 @@ namespace Nolan.HK.Application.Services
             var algorithm = SecurityAlgorithms.HmacSha256;
             var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSetting.SecurityKey));
             var signingCredentials = new SigningCredentials(secretKey, algorithm);
-            //创建令牌
+            
             var token = new JwtSecurityToken(
               issuer: _jwtSetting.Issuer,
               audience: _jwtSetting.Audience,
@@ -85,6 +84,7 @@ namespace Nolan.HK.Application.Services
               notBefore: DateTime.Now,
               expires: DateTime.Now.AddSeconds(10000000)
             );
+            await Task.Delay(100);
             string jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
             return jwtToken;
         }

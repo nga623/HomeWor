@@ -25,6 +25,8 @@ namespace Nolan.HK.MVC.Controllers
         private readonly IEfBasicRepository<Project> _Project;
         private readonly IHttpContextAccessor _IHttpContextAccessor;
         private readonly IEfBasicRepository<User> _User;
+        public static string UserName;
+        public static string UserType;
         public TimeCardController
             (
               HomeWorkContext context
@@ -44,11 +46,11 @@ namespace Nolan.HK.MVC.Controllers
             _IHttpContextAccessor = httpContextAccessor;
             _User = user;
         }
-
         public IActionResult Intail()
         {
             return View();
         }
+
         [TokenActionFilter]
         [HttpPost]
         public ActionResult GetToken()
@@ -58,8 +60,6 @@ namespace Nolan.HK.MVC.Controllers
             UserType = cureetUser.UserTypeEnum;
             return Json(null);
         }
-        public static string UserName;
-        public static string UserType;
 
         public    IActionResult Index()
         {
@@ -69,7 +69,6 @@ namespace Nolan.HK.MVC.Controllers
                 timeSheetSearchDto.User = UserName;
                 timeSheetSearchDto.UserType = Convert.ToInt32(UserType);
                 var list = _TimeSheetService.GetListAsync(timeSheetSearchDto).Result;
-
                 var projectList = _Project.Where(p => p.ProjectName != "").ToList();
                 var selectItemList = new List<SelectListItem>();
                 var selectList = new SelectList(projectList, "Id", "ProjectName");
@@ -81,10 +80,11 @@ namespace Nolan.HK.MVC.Controllers
             }
             else
             {
-                return Content("没有权限");
+                return Content("no promiss");
             }
 
         }
+
         [Authorize]
         public ActionResult Create(List<TimeSheetCreateDto> timeSheetCreateDto)
         {
@@ -99,12 +99,14 @@ namespace Nolan.HK.MVC.Controllers
             var s = _TimeSheet.RemoveAsync(model).Result;
             return RedirectToAction("Index");
         }
+
         [HttpGet]
         public async Task<ActionResult<int>> AuditTimeCard(Guid id)
         {
             await _TimeSheetService.AuditTimeCard(id);
             return RedirectToAction("Index");
         }
+
         public ActionResult Logout()
         {
             UserName = null;
