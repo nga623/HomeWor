@@ -15,4 +15,8 @@
     <PackageReference Include="System.Text.Encodings.Web" Version="5.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Nolan.HK.Domain\Nolan.HK.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

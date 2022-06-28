@@ -29,52 +29,51 @@
 
             @foreach (var timeSheet in Model)
             {
-                <tr>
+            <tr>
 
 
-                    @if (timeSheet.UserType == 1)
-                    {
-                        <td style="vertical-align: bottom; width: 100px">
-                            <h5>@timeSheet.UserName</h5> 
-                        </td>
-                        <td style="vertical-align: bottom; width: 200px">
-                            <h5>@timeSheet.ProjectName</h5>
-                        </td>
-                    }
-                    else
-                    {
-                        <td style="vertical-align: bottom; width: 200px">
-                            @Html.DropDownList("database-dropdownlist", ViewBag.database as IEnumerable<SelectListItem>, new { @selected = timeSheet.ProjectID, @class = "btn btn-success dropdown-toggle form-control display", })
-                        </td>
-                    }
+                @if (timeSheet.UserType == 1)
+                {
+                    <td style="vertical-align: bottom; width: 100px">
+                        <h5>@timeSheet.UserName</h5>
+                    </td>
+                    <td style="vertical-align: bottom; width: 200px">
+                        <h5>@timeSheet.ProjectName</h5>
+                    </td>
+                }
+                else
+                {
+                    <td style="vertical-align: bottom; width: 200px">
+                        @Html.DropDownList("database-dropdownlist", ViewBag.database as IEnumerable<SelectListItem>, new { @selected = timeSheet.ProjectID, @class = "btn btn-success dropdown-toggle form-control display", })
+                    </td>
+                }
 
 
-                    @foreach (var item in timeSheet.ListTimeSheetDetails)
-                    {
-                        <td disabled="disabled">
+                @foreach (var item in timeSheet.ListTimeSheetDetails)
+                {
+                    <td disabled="disabled">
 
-                            <div>@Html.DisplayFor(modelItem => item.Date)</div>
-                            <p>@Html.DisplayFor(modelItem => item.Weekday)</p>
-                            <input type='text' name='TimesheetCount' class='form-control' value=@Html.DisplayFor(modelItem => item.TimesheetCount) />
-                        </td>
-                    }
+                        <div>@Html.DisplayFor(modelItem => item.Date)</div>
+                        <p>@Html.DisplayFor(modelItem => item.Weekday)</p>
+                        <input type='text' name='TimesheetCount' class='form-control' value=@Html.DisplayFor(modelItem => item.TimesheetCount) />
+                    </td>
+                }
 
-                    @if (timeSheet.UserType == 1)
-                    {
-                        <td style="vertical-align: bottom; width: 100px">
-                            <a asp-action="Delete" class="btn btn-primary" asp-route-id="@timeSheet.Id">Delete</a>
-                        </td>
-                    }
+                @if (timeSheet.UserType == 1 && timeSheet.ApproveStatusEnum == 0)
+                {
+                    <td style="vertical-align: bottom; width: 100px">
+                        <a asp-action="Delete" class="btn btn-primary" asp-route-id="@timeSheet.Id">Delete</a>
+                    </td>
 
-                    @if (timeSheet.UserType == 1)
-                    {
-                        <td style="vertical-align: bottom; width: 100px">
-                            <a asp-action="AuditTimeCard" class="btn btn-primary" asp-route-id="@timeSheet.Id">Approve</a>
-                        </td>
-                    }
+                    <td style="vertical-align: bottom; width: 100px">
+                        <a asp-action="AuditTimeCard" class="btn btn-primary" asp-route-id="@timeSheet.Id">Approve</a>
+                    </td>
+                }
+
+                
 
 
-                </tr>
+            </tr>
             }
         </tbody>
     </table>

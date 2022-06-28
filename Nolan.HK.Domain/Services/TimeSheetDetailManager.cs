@@ -1,13 +1,7 @@
 ﻿using Nolan.Domain.Shared;
-using Nolan.HK.Application.Contracts.Dtos;
 using Nolan.HK.Domain.Entities;
-using Nolan.HK.Domain.Enum;
 using Nolan.Infra.Repository.IRepositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Nolan.HK.Domain.Services
 {
