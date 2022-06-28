@@ -13,17 +13,14 @@ namespace Nolan.HK.MVC.Controllers
     {
         private readonly IUserService _UserService;
         private readonly ILogger<UserController> _logger;
-        IOptions<JwtSetting> _settings;
         public UserController
             (
               IUserService userService
              , ILogger<UserController> logger
-             , IOptions<JwtSetting> settings
             )
         {
             _UserService = userService;
             _logger = logger;
-            _settings = settings;
         }
 
         public ActionResult Index()
