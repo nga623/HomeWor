@@ -34,9 +34,8 @@ namespace Nolan.HK.MVC.Controllers
             return View();
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [ApiResultFilter]
-        public async Task<ActionResult<bool>> Create(UserDto userDto)
+        public async Task<ActionResult<bool>> Create([FromBody] UserDto userDto)
         {
             return await _UserService.CreateAsync(userDto);
         }

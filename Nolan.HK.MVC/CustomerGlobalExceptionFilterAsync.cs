@@ -22,7 +22,7 @@ namespace Nolan.HK.MVC
             if (context.ExceptionHandled == false)
             {
                 Robj<object> robj = new Robj<object>();
-                robj.Error(context.Exception.ToString());
+                robj.Error(context.Exception.Message.ToString());
                 ObjectResult objectResult = new ObjectResult(robj);
                 context.Result = objectResult;
 

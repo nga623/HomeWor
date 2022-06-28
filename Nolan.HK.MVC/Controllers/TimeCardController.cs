@@ -61,14 +61,14 @@ namespace Nolan.HK.MVC.Controllers
         public static string UserName;
         public static string UserType;
 
-        public IActionResult Index()
+        public    IActionResult Index()
         {
             if (UserName != null)
             {
                 TimeSheetSearchDto timeSheetSearchDto = new TimeSheetSearchDto();
                 timeSheetSearchDto.User = UserName;
                 timeSheetSearchDto.UserType = Convert.ToInt32(UserType);
-                var list = _TimeSheetService.GetListAsync(timeSheetSearchDto);
+                var list = _TimeSheetService.GetListAsync(timeSheetSearchDto).Result;
 
                 var projectList = _Project.Where(p => p.ProjectName != "").ToList();
                 var selectItemList = new List<SelectListItem>();
