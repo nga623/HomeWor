@@ -14,6 +14,7 @@ using Nolan.Domain.Shared.ConfigModels;
 using Nolan.Infra.EfCore.PostGresSql;
 using Nolan.WebApi.Shared;
 using Nolan.WebApi.Shared.Filters;
+using Nolan.WebApi.Shared.Log;
 //using Nolan.WebApi.Shared.Log;
 using System;
 using System.Linq;
