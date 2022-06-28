@@ -14,33 +14,34 @@ namespace Nolan.HK.Application.Services
 {
     public class TimeSheetService : AbstractAppService, ITimeSheetService
     {
-        private readonly IEfBasicRepository<TimeSheet> _TimeSheet;
-        private readonly IEfBasicRepository<TimeSheetDetail> _TimeSheetDetail;
-        private readonly IEfBasicRepository<User> _User;
-        public TimeSheetService(
-              IEfBasicRepository<TimeSheet> timeSheet
-            , IEfBasicRepository<TimeSheetDetail> timeSheetDetail
-            , IEfBasicRepository<User> user
+        private readonly IEfBasicRepository<TimeSheet> _timeSheetEntity;
+        private readonly IEfBasicRepository<TimeSheetDetail> _timeSheetDetailEntity;
+        private readonly IEfBasicRepository<User> _userEntity;
+        public TimeSheetService
+            (
+              IEfBasicRepository<TimeSheet> timeSheetEntity
+            , IEfBasicRepository<TimeSheetDetail> timeSheetDetailEntity
+            , IEfBasicRepository<User> userEntity
             )
         {
-            _TimeSheet = timeSheet;
-            _TimeSheetDetail = timeSheetDetail;
-            _User = user;
+            _timeSheetEntity = timeSheetEntity;
+            _timeSheetDetailEntity = timeSheetDetailEntity;
+            _userEntity = userEntity;
         }
 
         public async Task<List<TimeSheetDto>> GetListAsync(TimeSheetSearchDto input)
         {
-            var cureetUser = _User
+            var cureetUser = _userEntity
                 .Where(p => p.Id != Guid.Empty && p.Name == input.User)
                 .FirstOrDefault();
-            var list = await _TimeSheet.Where(p => p.Id != Guid.Empty)
+            var list = await _timeSheetEntity.Where(p => p.Id != Guid.Empty)
                 .Include(p => p.User)
                 .Include(p => p.Project)
                 .Include(p => p.ListTimeSheetDetails.OrderBy(p => p.Date))
                 .ThenInclude(p => p.User)
                 .OrderBy(p => p.CreateTime)
                 .ToListAsync();
-            if (input.UserType == 0)
+            if (input.UserType == 0 && cureetUser != null)
             {
                 list = list.Where(p => p.ApproveStatusEnum == ApproveStatusEnum.UnApprove && p.Userid == cureetUser.Id).ToList();
             }
@@ -52,16 +53,19 @@ namespace Nolan.HK.Application.Services
         public async Task<int> CreateAsync(List<TimeSheetCreateDto> input, string userName)
         {
             var list = Mapper.Map<List<TimeSheet>>(input);
-            var user = _User.Where(p => p.Name == userName).FirstOrDefault();
-            var listSheet = _TimeSheet.Where(p => p.ApproveStatusEnum == ApproveStatusEnum.UnApprove && p.Userid == user.Id).ToList();
-            await _TimeSheet.RemoveRangeAsync(listSheet);
-
+            var user = _userEntity.Where(p => p.Name == userName).FirstOrDefault();
+            var listSheet = _timeSheetEntity.Where(p => p.ApproveStatusEnum == ApproveStatusEnum.UnApprove && p.Userid == user.Id).ToList();
+            await _timeSheetEntity.RemoveRangeAsync(listSheet);
+            if (user == null)
+            {
+                throw new Exception("user is not null");
+            }
             foreach (var item in list)
             {
                 var count = item.ListTimeSheetDetails.Sum(p => p.TimesheetCount);
                 item.Id = Guid.NewGuid();
                 item.TotalCount = count;
-                item.Userid = user.Id;
+                item.Userid =   user.Id;
                 item.CreateTime = DateTime.Now;
                 item.ApproveStatusEnum = ApproveStatusEnum.UnApprove;
                 item.ApproveStatus = ApproveStatusEnum.UnApprove.ToString();
@@ -72,17 +76,17 @@ namespace Nolan.HK.Application.Services
                     detail.Userid = user.Id;
                     detail.TimesheetID = item.Id;
                 }
-                await _TimeSheet.InsertAsync(item);
+                await _timeSheetEntity.InsertAsync(item);
             }
             return 1;
         }
 
         public async Task<int> AuditTimeCard(Guid id)
         {
-            var model = await _TimeSheet.GetAsync(id);
+            var model = await _timeSheetEntity.GetAsync(id);
             model.ApproveStatusEnum = ApproveStatusEnum.Approve;
             model.ApproveStatus = ApproveStatusEnum.Approve.ToString();
-            return await _TimeSheet.UpdateAsync(model);
+            return await _timeSheetEntity.UpdateAsync(model);
         }
     }
 }
