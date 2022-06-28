@@ -15,7 +15,6 @@ using Nolan.Infra.EfCore.PostGresSql;
 using Nolan.WebApi.Shared;
 using Nolan.WebApi.Shared.Filters;
 using Nolan.WebApi.Shared.Log;
-//using Nolan.WebApi.Shared.Log;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -34,20 +33,16 @@ namespace Nolan.HK.MVC
         private IServiceCollection _services;
 
         public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
+         
         public void ConfigureServices(IServiceCollection services)
         {
             _services = services;
-
             services.Configure<JwtSetting>(option =>
             {
                 option.SecurityKey = Configuration["JwtSetting:SecurityKey"];
                 option.Issuer = Configuration["JwtSetting:Issuer"];
                 option.Audience = Configuration["JwtSetting:Audience"];
-
             });
-
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
               {
@@ -63,27 +58,24 @@ namespace Nolan.HK.MVC
                   };
               });
 
-
             services.AddDbContext<HomeWorkContext>(
-                options =>
-           options.UseNpgsql(Configuration.GetConnectionString("HomeWorkContext"), optionsBuilder =>
-           {
-               optionsBuilder.MigrationsAssembly("Nolan.HK.Migrations, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
-           })
-           );
+            options =>
+            options.UseNpgsql(Configuration.GetConnectionString("HomeWorkContext"), optionsBuilder =>
+            {
+                optionsBuilder.MigrationsAssembly("Nolan.HK.Migrations, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
+            }));
             services.AddControllersWithViews();
             services.AddHttpContextAccessor();
-             services.AddControllers(options => options.Filters.Add(typeof(CustomerGlobalExceptionFilterAsync)));
-            //services.AddSingleton<INLogHelper, NLogHelper>();
-
+            services.AddControllers(options => options.Filters.Add(typeof(CustomerGlobalExceptionFilterAsync)));
+            services.AddSingleton<INLogHelper, NLogHelper>();
             //services.AddMvc(options =>
             //{   //加入返回结果处理
             //    options.Filters.Add<ApiResultFilter>();
             //});
         }
+
         public void ConfigureContainer(ContainerBuilder builder)
         {
-
             var hostBuilderContext = (HostBuilderContext)_services
             .FirstOrDefault(d => d.ServiceType == typeof(HostBuilderContext))
             ?.ImplementationInstance;
@@ -93,10 +85,10 @@ namespace Nolan.HK.MVC
                 ?.ImplementationInstance;
             var applicationAssembly = Assembly.Load(serviceInfo.AssemblyFullName.Replace("MVC", "Application"));
             var applicationModelType = applicationAssembly.GetTypes()
-                            .FirstOrDefault(m =>
-                               m.FullName != null
-                               && typeof(NolanApplicationModule).IsAssignableFrom(m)
-                               && !m.IsAbstract);
+                                .FirstOrDefault(m =>
+                                m.FullName != null
+                                && typeof(NolanApplicationModule).IsAssignableFrom(m)
+                                && !m.IsAbstract);
 
             builder.RegisterModule<NolanInfraEfCoreModule>();
             builder.RegisterModule(Activator.CreateInstance(applicationModelType, configuration, serviceInfo) as IModule);

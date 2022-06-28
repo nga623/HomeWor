@@ -4,10 +4,8 @@
 }
 <h1>Register</h1>
 <hr />
-
-
 <div class="col-md-6 ">
-    <form action="@Url.Action("/TimeCard/index")">
+    <form asp-antiforgery="true"  action="@Url.Action("/TimeCard/index")">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group align-items-center">
             <label asp-for="Name" class="control-label"></label>
@@ -37,17 +35,12 @@
         </div>
     </form>
 </div>
-
-
 <div style="margin: auto">
     <a asp-action="Index">Back to Login</a>
 </div>
-
-
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script>
     $(function () {
-
         $("#Register").click(function () {
             var name = $("#Name").val();
             var password = $("#Password").val();
@@ -72,17 +65,13 @@
                     }
                     else {
 
-                        window.location.href = "/TimeCard/Intail";
+                        window.location.href = "/User/Index";
                     }
                 }
             });
         });
     });
-
 </script>
-
-
- 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

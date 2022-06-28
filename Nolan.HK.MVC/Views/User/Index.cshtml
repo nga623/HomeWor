@@ -4,7 +4,6 @@
 }
 <h1>Login</h1>
 <hr />
- 
     <div class="col-md-4" >
         <form action="@Url.Action("/TimeCard/index")">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -26,18 +25,14 @@
             </div>
         </form>
     </div>
- 
-
-
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script>
     $(function () {
-
         $("#submit").click(function () {
             var name = $("#Name").val();
             var password = $("#Password").val();
             $.ajax({
-                url: "User/Login",
+                url: "/User/Login",
                 contentType: "application/json;charset=utf-8",
                 type: "post",
                 data: JSON.stringify({
@@ -46,7 +41,7 @@
                 }),
                 success: function (data) {
                     if (data.code != 1000) {
-                        alert(data.result);
+                        alert(data.message);
                     }
                     else {
                         sessionStorage.setItem("key", data.result);

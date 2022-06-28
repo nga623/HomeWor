@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging;
+using Nolan.WebApi.Shared.Filters;
+using Nolan.WebApi.Shared.ResultModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,10 +31,14 @@ namespace Nolan.WebApi.Shared.Log
             // 如果异常没有被处理，则进行处理
             if (context.ExceptionHandled == false)
             {
-                // 记录错误信息
-                _logHelper.LogError(context.Exception);
-                // 设置为true，表示异常已经被处理了，其它捕获异常的地方就不会再处理了
+                Robj<object> robj = new Robj<object>();
+                robj.Error(context.Exception.Message.ToString());
+                ObjectResult objectResult = new ObjectResult(robj);
+                context.Result = objectResult;
+                 
                 context.ExceptionHandled = true;
+                var _logger = AutofacUtil.GetService<ILogger<LogFilter>>();
+                _logger.LogError("记录异常");
             }
 
             return Task.CompletedTask;

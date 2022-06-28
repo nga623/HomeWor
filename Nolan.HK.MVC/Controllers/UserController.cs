@@ -25,18 +25,25 @@ namespace Nolan.HK.MVC.Controllers
             _logger = logger;
             _settings = settings;
         }
+
         public ActionResult Index()
         {
             return View();
         }
+
         public ActionResult Registered()
         {
             return View();
         }
+
         [HttpPost]
         [ApiResultFilter]
         public async Task<ActionResult<bool>> Create([FromBody] UserDto userDto)
         {
+            if ( !ModelState.IsValid)
+            {
+                return View(false);
+            }
             return await _UserService.CreateAsync(userDto);
         }
 
@@ -47,6 +54,10 @@ namespace Nolan.HK.MVC.Controllers
         {
             _logger.LogError("这是错误信息");
             _logger.LogInformation("这是提示信息");
+            if (!ModelState.IsValid)
+            {
+                return View(null);
+            }
             return await _UserService.LoginAsync(userDto);
         }
 
