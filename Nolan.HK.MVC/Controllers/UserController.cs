@@ -17,8 +17,8 @@ namespace Nolan.HK.MVC.Controllers
         public UserController
             (
               IUserService userService
-            , ILogger<UserController> logger
-            , IOptions<JwtSetting> settings
+             , ILogger<UserController> logger
+             , IOptions<JwtSetting> settings
             )
         {
             _UserService = userService;
@@ -40,7 +40,7 @@ namespace Nolan.HK.MVC.Controllers
         {
             return await _UserService.CreateAsync(userDto);
         }
-       
+
         [HttpPost]
         [LogFilter]
         [ApiResultFilter]

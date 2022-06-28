@@ -47,7 +47,6 @@ namespace Nolan.HK.Application.Services
 
         public async Task<string> LoginAsync(UserDto input)
         {
-           
             await Task.Delay(100);
             var user = _User.Where(p => p.Name == input.Name && p.Password == input.Password).FirstOrDefault();
             var returnDto = Mapper.Map<UserDto>(user);
@@ -60,6 +59,7 @@ namespace Nolan.HK.Application.Services
                 throw new Exception("用户名密码错误");
             }
         }
+
         public string GetToken(UserDto user)
         {
             //创建用户身份标识，可按需要添加更多信息

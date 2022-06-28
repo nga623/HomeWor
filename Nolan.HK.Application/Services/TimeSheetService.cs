@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 using Nolan.Application.Shared;
 using Nolan.HK.Domain.Enum;
 using Microsoft.EntityFrameworkCore;
+
 namespace Nolan.HK.Application.Services
 {
-
     public class TimeSheetService : AbstractAppService, ITimeSheetService
     {
         private readonly IEfBasicRepository<TimeSheet> _TimeSheet;
@@ -28,18 +28,18 @@ namespace Nolan.HK.Application.Services
             _User = user;
         }
 
-        public List<TimeSheetDto> GetListAsync(TimeSheetSearchDto input)
+        public async Task<List<TimeSheetDto>> GetListAsync(TimeSheetSearchDto input)
         {
             var cureetUser = _User
                 .Where(p => p.Id != Guid.Empty && p.Name == input.User)
                 .FirstOrDefault();
-            var list = _TimeSheet.Where(p => p.Id != Guid.Empty)
+            var list = await _TimeSheet.Where(p => p.Id != Guid.Empty)
                 .Include(p => p.User)
-                .Include(p=>p.Project)
+                .Include(p => p.Project)
                 .Include(p => p.ListTimeSheetDetails.OrderBy(p => p.Date))
                 .ThenInclude(p => p.User)
                 .OrderBy(p => p.CreateTime)
-                .ToList();
+                .ToListAsync();
             if (input.UserType == 0)
             {
                 list = list.Where(p => p.ApproveStatusEnum == ApproveStatusEnum.UnApprove && p.Userid == cureetUser.Id).ToList();
@@ -48,6 +48,7 @@ namespace Nolan.HK.Application.Services
             listDto.ForEach(p => p.UserType = Convert.ToInt32(input.UserType));
             return listDto;
         }
+
         public async Task<int> CreateAsync(List<TimeSheetCreateDto> input, string userName)
         {
             var list = Mapper.Map<List<TimeSheet>>(input);
@@ -83,6 +84,5 @@ namespace Nolan.HK.Application.Services
             model.ApproveStatus = ApproveStatusEnum.Approve.ToString();
             return await _TimeSheet.UpdateAsync(model);
         }
-
     }
 }
