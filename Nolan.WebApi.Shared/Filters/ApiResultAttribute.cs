@@ -10,15 +10,12 @@ using System.Threading.Tasks;
  
 namespace Nolan.WebApi.Shared.Filters
 {
+
     /// <summary>
-    /// ApiResult封装
+    /// ApiResult
     /// </summary>
     public class ApiResultFilter : Microsoft.AspNetCore.Mvc.Filters.ActionFilterAttribute
     {
-        /// <summary>
-        /// Action执行完成,返回结果处理
-        /// </summary>
-        /// <param name="actionExecutedContext"></param>
         public override void OnActionExecuted(ActionExecutedContext actionExecutedContext)
         {
             ObjectResult result = actionExecutedContext.Result as ObjectResult;
@@ -26,11 +23,9 @@ namespace Nolan.WebApi.Shared.Filters
             {   
                 Robj<object> robj = new Robj<object>();
                 robj.Success(result.Value);
-                   
                 ObjectResult objectResult = new ObjectResult(robj);
                 actionExecutedContext.Result = objectResult;
             }
-           
             base.OnActionExecuted(actionExecutedContext);
         }
     }

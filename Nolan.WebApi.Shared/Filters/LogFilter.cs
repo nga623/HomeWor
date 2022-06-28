@@ -10,14 +10,12 @@ using System.Threading.Tasks;
 
 namespace Nolan.WebApi.Shared.Filters
 {
-
     public class LogFilter : ActionFilterAttribute
     {
-
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             var _logger = AutofacUtil.GetService<ILogger<LogFilter>>();
-            _logger.LogInformation("这里是action执行的方法");
+            _logger.LogInformation("this is the action method");
         }
     }
 }
