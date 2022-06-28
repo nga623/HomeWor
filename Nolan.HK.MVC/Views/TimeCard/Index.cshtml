@@ -97,7 +97,6 @@
                 }
                 month -= 1;
                 days += monthDays[month] - offset; 
-                //days = Math.abs(days);
                 endDate = year + "/" + month + "/" + days;
                 if (days - 6 > 0) 
                     days = days - 6;
@@ -129,7 +128,9 @@
             var val = d.getFullYear() + "/" + month + "/" + day;
             return val;
         }
+        var weekArr = [];
         $("#Create").click(function () {
+            weekArr.push($("#week").val());
             var first = DateRange($("#week").val());  
             var tempTd = "";
             var firstDay = "";
@@ -172,46 +173,60 @@
             $("#timecard").append(tr);
         });
         $("#submit").click(function () {
-            var form = $(this).parents('form');
-            var result = [];
-            form.find('tbody tr').each(function () {
-                var thisItem = $(this);
-                var ProjectID = $(this).find("td:first").find("select:eq(0)").val();
-                var detail = [];
-                thisItem.find('td').each(function () {
-                    var thistd = $(this);
-                    var hasVal = thistd.find("p:eq(0)").text();
-                    if (hasVal != "" && hasVal != null) {
-                        detail.push({
-                            Weekday: thistd.find("p:eq(0)").text(),
-                            Date: thistd.find("div:eq(0)").text(),
-                            TimesheetCount: thistd.find('input:eq(0)').val(),
-                        })
+
+            var newArr = [];
+            weekArr.forEach((item) => {
+                if (!newArr.includes(item)) {
+                    newArr.push(item);
+                }
+            })
+            if (newArr.length != weekArr.length) {
+                alert("can not add the same week");
+                return false;
+            }
+            else {
+                var form = $(this).parents('form');
+                var result = [];
+                form.find('tbody tr').each(function () {
+                    var thisItem = $(this);
+                    var ProjectID = $(this).find("td:first").find("select:eq(0)").val();
+                    var detail = [];
+                    thisItem.find('td').each(function () {
+                        var thistd = $(this);
+                        var hasVal = thistd.find("p:eq(0)").text();
+                        if (hasVal != "" && hasVal != null) {
+                            detail.push({
+                                Weekday: thistd.find("p:eq(0)").text(),
+                                Date: thistd.find("div:eq(0)").text(),
+                                TimesheetCount: thistd.find('input:eq(0)').val(),
+                            })
+                        }
+                    });
+                    if (ProjectID != "" && ProjectID != null && ProjectID != 0) {
+                        result.push({
+                            ProjectID: ProjectID,
+                            ListTimeSheetDetails: detail
+                        });
                     }
                 });
-                if (ProjectID != "" && ProjectID != null && ProjectID != 0) {
-                    result.push({
-                        ProjectID: ProjectID,
-                        ListTimeSheetDetails: detail
-                    });
-                }
-            });
-            var token = "Bearer " + sessionStorage.getItem("key");
-            $.ajax({
-                url: "/TimeCard/Create",
-                type: 'post',
-                dataType: 'json',
-                data: { timeSheetCreateDto: result },
-                cache: false,
-                headers: {
-                    "Authorization": token,
-                    'Content-Type': 'application/x-www-form-urlencoded'   
-                },
-                success: function (res) {
-                    alert("sucess");
-                }
-            });
-            return false;
+                var token = "Bearer " + sessionStorage.getItem("key");
+                $.ajax({
+                    url: "/TimeCard/Create",
+                    type: 'post',
+                    dataType: 'json',
+                    data: { timeSheetCreateDto: result },
+                    cache: false,
+                    headers: {
+                        "Authorization": token,
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    success: function (res) {
+                        alert("sucess");
+                    }
+                });
+                return false;
+            }
+           
         });
         $("#logout").click(function () {
             $.ajax({
