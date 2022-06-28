@@ -1,89 +1,66 @@
 ﻿@model List<Nolan.HK.Application.Contracts.Dtos.TimeSheetDto>
-
 <div>
-    <h5>cureent user：@ViewBag.UserName</h5> 
+    <h5>Current User：@ViewBag.UserName</h5>
     <p style="float: right">
-   
-    </p>
-    <p>
-       
     </p>
 </div>
-
 <br />
- 
-
 <form action="@Url.Action("Create")">
     <div class="form-group">
         @if (ViewBag.UserType == "0")
         {
             <input type="button" id="Create" class="btn btn-primary" value="Create" />
             <input value="2022-W25" type="week" id="week" class="btn btn-primary" />
-            <input style="margin-left: 10px; margin-right: 10px; float: right; width: 180px "     type="submit" id="submit" value="Submit" class="btn btn-primary" />
+            <input style="margin-left: 10px; margin-right: 10px; float: right; width: 180px " type="submit" id="submit" value="Submit" class="btn btn-primary" />
         }
-         
     </div>
     @Html.DropDownList("database-dropdownlist", ViewBag.database as IEnumerable<SelectListItem>, new { @id = "tempSel", @class = "btn btn-success dropdown-toggle form-control display", @style = "display:none" })
     <table class="table" id="timecard">
         <tbody>
-
             @foreach (var timeSheet in Model)
             {
-            <tr>
+                <tr>
+                    @if (timeSheet.UserType == 1)
+                    {
+                        <td style="vertical-align: bottom; width: 100px">
+                            <h5>@timeSheet.UserName</h5>
+                        </td>
+                        <td style="vertical-align: bottom; width: 200px">
+                            <h5>@timeSheet.ProjectName</h5>
+                        </td>
+                    }
+                    else
+                    {
+                        <td style="vertical-align: bottom; width: 200px">
+                            @Html.DropDownList("database-dropdownlist", ViewBag.database as IEnumerable<SelectListItem>, new { @selected = timeSheet.ProjectID, @class = "btn btn-success dropdown-toggle form-control display", })
+                        </td>
+                    }
+                    @foreach (var item in timeSheet.ListTimeSheetDetails)
+                    {
+                        <td disabled="disabled">
 
-
-                @if (timeSheet.UserType == 1)
-                {
-                    <td style="vertical-align: bottom; width: 100px">
-                        <h5>@timeSheet.UserName</h5>
-                    </td>
-                    <td style="vertical-align: bottom; width: 200px">
-                        <h5>@timeSheet.ProjectName</h5>
-                    </td>
-                }
-                else
-                {
-                    <td style="vertical-align: bottom; width: 200px">
-                        @Html.DropDownList("database-dropdownlist", ViewBag.database as IEnumerable<SelectListItem>, new { @selected = timeSheet.ProjectID, @class = "btn btn-success dropdown-toggle form-control display", })
-                    </td>
-                }
-
-
-                @foreach (var item in timeSheet.ListTimeSheetDetails)
-                {
-                    <td disabled="disabled">
-
-                        <div>@Html.DisplayFor(modelItem => item.Date)</div>
-                        <p>@Html.DisplayFor(modelItem => item.Weekday)</p>
-                        <input type='text' name='TimesheetCount' class='form-control' value=@Html.DisplayFor(modelItem => item.TimesheetCount) />
-                    </td>
-                }
-
-                @if (timeSheet.UserType == 1 && timeSheet.ApproveStatusEnum == 0)
-                {
-                    <td style="vertical-align: bottom; width: 100px">
-                        <a asp-action="Delete" class="btn btn-primary" asp-route-id="@timeSheet.Id">Delete</a>
-                    </td>
-
-                    <td style="vertical-align: bottom; width: 100px">
-                        <a asp-action="AuditTimeCard" class="btn btn-primary" asp-route-id="@timeSheet.Id">Approve</a>
-                    </td>
-                }
-
-                
-
-
-            </tr>
+                            <div>@Html.DisplayFor(modelItem => item.Date)</div>
+                            <p>@Html.DisplayFor(modelItem => item.Weekday)</p>
+                            <input type='text' name='TimesheetCount' class='form-control' value=@Html.DisplayFor(modelItem => item.TimesheetCount) />
+                        </td>
+                    }
+                    @if (timeSheet.UserType == 1 && timeSheet.ApproveStatusEnum == 0)
+                    {
+                        <td style="vertical-align: bottom; width: 100px">
+                            <a asp-action="Delete" class="btn btn-primary" asp-route-id="@timeSheet.Id">Delete</a>
+                        </td>
+                        <td style="vertical-align: bottom; width: 100px">
+                            <a asp-action="AuditTimeCard" class="btn btn-primary" asp-route-id="@timeSheet.Id">Approve</a>
+                        </td>
+                    }
+                </tr>
             }
         </tbody>
     </table>
 </form>
-
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script>
-
     $(function () {
-
         function DateRange(value) {
             var startDate = "";
             var year, week, date;
@@ -153,10 +130,7 @@
             return val;
         }
         $("#Create").click(function () {
-
             var first = DateRange($("#week").val()); //获取周日历起始截止日期
-
-
             var tempTd = "";
             var firstDay = "";
             for (var i = 0; i < 7; i++) {
@@ -200,14 +174,9 @@
         $("#submit").click(function () {
             var form = $(this).parents('form');
             var result = [];
-
             form.find('tbody tr').each(function () {
                 var thisItem = $(this);
                 var ProjectID = $(this).find("td:first").find("select:eq(0)").val();
-                //if (ProjectID == 0) {
-                //    alert("请选择项目");
-                //    return;
-                //}
                 var detail = [];
                 thisItem.find('td').each(function () {
                     var thistd = $(this);
@@ -217,10 +186,8 @@
                             Weekday: thistd.find("p:eq(0)").text(),
                             Date: thistd.find("div:eq(0)").text(),
                             TimesheetCount: thistd.find('input:eq(0)').val(),
-
                         })
                     }
-
                 });
                 if (ProjectID != "" && ProjectID != null && ProjectID != 0) {
                     result.push({
@@ -228,15 +195,12 @@
                         ListTimeSheetDetails: detail
                     });
                 }
-
             });
-
             var token = "Bearer " + sessionStorage.getItem("key");
             $.ajax({
                 url: "/TimeCard/Create",
                 type: 'post',
                 dataType: 'json',
-                //data: JSON.stringify({data:{status: "start"}}),
                 data: { timeSheetCreateDto: result },
                 cache: false,
                 headers: {
@@ -244,11 +208,9 @@
                     'Content-Type': 'application/x-www-form-urlencoded'  //multipart/form-data;boundary=--xxxxxxx   application/json
                 },
                 success: function (res) {
-
                     alert("添加成功");
                 }
             });
-
             return false;
         });
         $("#logout").click(function () {
@@ -260,9 +222,6 @@
                     window.location.href = "https://localhost:5001";
                 }
             });
-
         });
     });
-
-
 </script>
