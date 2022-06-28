@@ -1,18 +1,13 @@
-﻿using AutoMapper;
+﻿
 using Nolan.HK.Application.Contracts.Dtos;
 using Nolan.HK.Application.Contracts.Services;
 using Nolan.HK.Domain.Entities;
 using Nolan.Infra.Repository.IRepositories;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Nolan.Infra.Mapper;
 using Nolan.Application.Shared;
-using Nolan.HK.Domain.Services;
-using Nolan.HK.Domain.Enum;
-using Nolan.WebApi.Shared.ResultModel;
 using Microsoft.Extensions.Options;
 using Nolan.Domain.Shared.ConfigModels;
 using System.Security.Claims;
@@ -34,46 +29,36 @@ namespace Nolan.HK.Application.Services
             _User = user;
             _settings = settings;
         }
-        public async Task<int> CreateAsync(UserDto input)
+        public async Task<bool> CreateAsync(UserDto input)
         {
             var user = Mapper.Map<User>(input);
             user.Id = Guid.NewGuid();
             var hasUser = _User.Where(p => p.Name == input.Name).FirstOrDefault();
             if (hasUser == null)
             {
-                return await _User.InsertAsync(user);
+                return await _User.InsertAsync(user) > 0 ? true : false;
             }
             else
             {
-                return 0;
+                throw new Exception("用户名重复");
+                 
             }
-
-        }
-
-        public UserDto GetAsync(UserDto input)
-        {
-            var listUser = _User.Where(p => p.Id != Guid.Empty).ToList();
-            var user = listUser.Where(p => p.Name == input.Name).FirstOrDefault();
-            return Mapper.Map<UserDto>(user);
         }
 
         public async Task<string> LoginAsync(UserDto input)
         {
-            var listUser = _User.Where(p => p.Id != Guid.Empty).ToList();
+           
             await Task.Delay(100);
-            var user = listUser.Where(p => p.Name == input.Name && p.Password == input.Password).FirstOrDefault();
+            var user = _User.Where(p => p.Name == input.Name && p.Password == input.Password).FirstOrDefault();
             var returnDto = Mapper.Map<UserDto>(user);
             if (returnDto != null)
             {
-               return GetToken(returnDto);
+                return GetToken(returnDto);
             }
             else
             {
-                return string.Empty;
+                throw new Exception("用户名密码错误");
             }
-            
-             
-
         }
         public string GetToken(UserDto user)
         {

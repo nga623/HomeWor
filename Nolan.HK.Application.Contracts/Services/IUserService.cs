@@ -9,8 +9,8 @@ namespace Nolan.HK.Application.Contracts.Services
      
     public interface IUserService
     {
-        Task<int> CreateAsync(UserDto input);
+        Task<bool> CreateAsync(UserDto input);
         Task<string> LoginAsync(UserDto input);
-        UserDto GetAsync(UserDto input);
+       // UserDto GetAsync(UserDto input);
     }
 }

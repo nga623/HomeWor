@@ -23,7 +23,7 @@ using System.Text;
 
 namespace Nolan.HK.MVC
 {
-    
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -38,13 +38,13 @@ namespace Nolan.HK.MVC
         public void ConfigureServices(IServiceCollection services)
         {
             _services = services;
-           
+
             services.Configure<JwtSetting>(option =>
             {
                 option.SecurityKey = Configuration["JwtSetting:SecurityKey"];
                 option.Issuer = Configuration["JwtSetting:Issuer"];
                 option.Audience = Configuration["JwtSetting:Audience"];
-               
+
             });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -53,17 +53,16 @@ namespace Nolan.HK.MVC
                   options.TokenValidationParameters = new TokenValidationParameters
                   {
                       ValidateIssuer = false,
-                      ValidateActor=false,
-                      ValidateAudience=false,
+                      ValidateActor = false,
+                      ValidateAudience = false,
                       ValidIssuer = Configuration["JwtSetting:Issuer"],
                       ValidAudience = Configuration["JwtSetting:Audience"],
                       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSetting:SecurityKey"])),
-                      // 默认允许 300s  的时间偏移量，设置为0
                       ClockSkew = TimeSpan.Zero
                   };
               });
 
-          
+
             services.AddDbContext<HomeWorkContext>(
                 options =>
            options.UseNpgsql(Configuration.GetConnectionString("HomeWorkContext"), optionsBuilder =>
@@ -73,7 +72,7 @@ namespace Nolan.HK.MVC
            );
             services.AddControllersWithViews();
             services.AddHttpContextAccessor();
-            // services.AddControllers(options => options.Filters.Add(typeof(CustomerGlobalExceptionFilterAsync)));
+             services.AddControllers(options => options.Filters.Add(typeof(CustomerGlobalExceptionFilterAsync)));
             //services.AddSingleton<INLogHelper, NLogHelper>();
 
             //services.AddMvc(options =>
@@ -103,7 +102,7 @@ namespace Nolan.HK.MVC
             Action<ContainerBuilder> completedExecute = null;
             completedExecute?.Invoke(builder);
         }
-        
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             AutofacUtil.Container = app.ApplicationServices.GetAutofacRoot();
@@ -129,5 +128,5 @@ namespace Nolan.HK.MVC
             });
         }
     }
-     
+
 }

@@ -24,7 +24,7 @@ namespace Nolan.WebApi.Shared.Filters
         {
             ObjectResult result = actionExecutedContext.Result as ObjectResult;
             if (result != null)
-            {   // 重新封装回传格式
+            {   
                 Robj<object> robj = new Robj<object>();
                 robj.Success(result.Value);
                    

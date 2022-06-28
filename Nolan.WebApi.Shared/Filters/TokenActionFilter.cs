@@ -17,7 +17,6 @@ namespace Nolan.WebApi.Shared.Filters
             if (string.IsNullOrEmpty(bearer) || !bearer.Contains("Bearer")) return;
             string[] jwt = bearer.Split(' ');
             var tokenObj = new JwtSecurityToken(jwt[1]);
-
             var claimsIdentity = new ClaimsIdentity(tokenObj.Claims);
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
             context.HttpContext.User = claimsPrincipal;
