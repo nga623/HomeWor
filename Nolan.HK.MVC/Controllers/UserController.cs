@@ -49,8 +49,8 @@ namespace Nolan.HK.MVC.Controllers
         [ApiResultFilter]
         public async Task<ActionResult<string>> Login([FromBody] UserDto userDto)
         {
-            _logger.LogError("这是错误信息");
-            _logger.LogInformation("这是提示信息");
+            _logger.LogError("this is error message");
+            _logger.LogInformation("this is info message");
             if (!ModelState.IsValid)
             {
                 return View(null);

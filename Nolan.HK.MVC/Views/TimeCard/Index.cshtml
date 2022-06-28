@@ -67,43 +67,43 @@
             var month;
             var s_month = ["04", "06", "09", "11"];
             var b_month = ["01", "03", "05", "07", "08", "10", "12"];
-            if ((/^(\d{4}-\d{2})$/).test(value)) { 				//月份选择
+            if ((/^(\d{4}-\d{2})$/).test(value)) { 				 
                 year = parseInt(value.substring(0, 4));
                 month = value.substring(5, 7);
                 startDate = year + "-" + month + "-" + "01";
-                if (s_month.indexOf(month) > -1) { //小月
+                if (s_month.indexOf(month) > -1) {  
                     endDate = year + "-" + month + "-" + "30";
                 }
-                else if (b_month.indexOf(month) > -1) { //大月
+                else if (b_month.indexOf(month) > -1) {  
                     endDate = year + "-" + month + "-" + "31";
                 }
-                else if (month == "02") { //2月
+                else if (month == "02") {  
                     if (year % 4 != 0)
                         endDate = year + "-" + month + "-" + "28";
                     else
                         endDate = year + "-" + month + "-" + "29";
                 }
             }
-            else if (value.indexOf("W") != -1) { 			//周选择
+            else if (value.indexOf("W") != -1) { 			 
                 year = parseInt(value.substring(0, 4));
                 week = parseInt(value.substring(6, 8));
                 var days = week * 7;
                 var f = year + "-01-01";
-                var first = new Date(f).getDay();//一年第一天周几
-                var offset = first == 1 ? 0 : first - 1;//偏移
+                var first = new Date(f).getDay(); 
+                var offset = first == 1 ? 0 : first - 1; 
                 var monthDays = (year % 4 == 0) ? [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] : [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
                 for (month = 0; days > 0; month++) {
                     days -= monthDays[month];
                 }
                 month -= 1;
-                days += monthDays[month] - offset;//在原先理解的基础上算出的某一周最后一天,偏移后就是某一周最后一天的日期
+                days += monthDays[month] - offset; 
                 //days = Math.abs(days);
                 endDate = year + "/" + month + "/" + days;
-                if (days - 6 > 0)//起始日期是否同一个月
+                if (days - 6 > 0) 
                     days = days - 6;
                 else {
                     days = 6 - days;
-                    if (month - 1 < 1) { //回到上一年
+                    if (month - 1 < 1) {  
                         year -= 1;
                         month = 12;
                     }
@@ -130,7 +130,7 @@
             return val;
         }
         $("#Create").click(function () {
-            var first = DateRange($("#week").val()); //获取周日历起始截止日期
+            var first = DateRange($("#week").val());  
             var tempTd = "";
             var firstDay = "";
             for (var i = 0; i < 7; i++) {
@@ -205,10 +205,10 @@
                 cache: false,
                 headers: {
                     "Authorization": token,
-                    'Content-Type': 'application/x-www-form-urlencoded'  //multipart/form-data;boundary=--xxxxxxx   application/json
+                    'Content-Type': 'application/x-www-form-urlencoded'   
                 },
                 success: function (res) {
-                    alert("添加成功");
+                    alert("sucess");
                 }
             });
             return false;
