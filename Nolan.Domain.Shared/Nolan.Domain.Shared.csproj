@@ -6,8 +6,10 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="5.1.0" />
+    <PackageReference Include="Microsoft.Extensions.WebEncoders" Version="5.0.0" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.10.0" />
     <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
+    <PackageReference Include="System.Text.Encodings.Web" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -10,8 +10,8 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
- 
- 
+using System.Threading.Tasks;
+
 namespace Nolan.HK.MVC.Controllers
 {
     public class UserController : Controller
@@ -23,7 +23,7 @@ namespace Nolan.HK.MVC.Controllers
             (
               IUserService userService
             , ILogger<UserController> logger
-            ,  IOptions<JwtSetting> settings
+            , IOptions<JwtSetting> settings
             )
         {
             _UserService = userService;
@@ -40,7 +40,7 @@ namespace Nolan.HK.MVC.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(  UserDto userDto)
+        public ActionResult Create(UserDto userDto)
         {
             try
             {
@@ -64,12 +64,11 @@ namespace Nolan.HK.MVC.Controllers
             var claims = new Claim[]
             {
     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-    new Claim("name", user.Name.ToString(), ClaimValueTypes.Integer32), // 用户id
-   // new Claim("name", user.Name), // 用户名
-    new Claim("UserTypeEnum", user.UserTypeEnum.ToString(),ClaimValueTypes.Integer32) // 是否是管理员
+    new Claim("name", user.Name.ToString(), ClaimValueTypes.Integer32),
+    new Claim("UserTypeEnum", user.UserTypeEnum.ToString(),ClaimValueTypes.Integer32)
             };
             var _jwtSetting = new JwtSetting();
-            _jwtSetting.SecurityKey =_settings.Value.SecurityKey;
+            _jwtSetting.SecurityKey = _settings.Value.SecurityKey;
             _jwtSetting.Issuer = _settings.Value.Issuer;
             _jwtSetting.Audience = _settings.Value.Audience;
             var algorithm = SecurityAlgorithms.HmacSha256;
@@ -89,31 +88,16 @@ namespace Nolan.HK.MVC.Controllers
         }
         [HttpPost]
         [LogFilter]
-        public ActionResult Login( [FromBody] UserDto userDto)
+        [ApiResultFilter]
+        public async Task<ActionResult<string>> Login([FromBody] UserDto userDto)
         {
-           
+
             _logger.LogError("这是错误信息");
             _logger.LogInformation("这是提示信息");
-            string token = "";
-            try
-            {
-                var user = _UserService.LoginAsync(userDto).Result;
-               var s= user.Address;
-                if (user!=null)
-                {
-                    token = GetToken(user);
-                }
-                else
-                {
-                    return Content("nopass");
-                }
-            }
-            catch
-            {
-              
-            }
-            return Content(token);
+             return await _UserService.LoginAsync(userDto);
+            
+           
         }
-        
+
     }
 }

@@ -14,7 +14,7 @@ using Nolan.Domain.Shared.ConfigModels;
 using Nolan.Infra.EfCore.PostGresSql;
 using Nolan.WebApi.Shared;
 using Nolan.WebApi.Shared.Filters;
-using Nolan.WebApi.Shared.Log;
+//using Nolan.WebApi.Shared.Log;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -73,8 +73,13 @@ namespace Nolan.HK.MVC
            );
             services.AddControllersWithViews();
             services.AddHttpContextAccessor();
-            services.AddControllers(options => options.Filters.Add(typeof(CustomerGlobalExceptionFilterAsync)));
-            services.AddSingleton<INLogHelper, NLogHelper>();
+            // services.AddControllers(options => options.Filters.Add(typeof(CustomerGlobalExceptionFilterAsync)));
+            //services.AddSingleton<INLogHelper, NLogHelper>();
+
+            //services.AddMvc(options =>
+            //{   //加入返回结果处理
+            //    options.Filters.Add<ApiResultFilter>();
+            //});
         }
         public void ConfigureContainer(ContainerBuilder builder)
         {
@@ -98,7 +103,7 @@ namespace Nolan.HK.MVC
             Action<ContainerBuilder> completedExecute = null;
             completedExecute?.Invoke(builder);
         }
-         
+        
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             AutofacUtil.Container = app.ApplicationServices.GetAutofacRoot();

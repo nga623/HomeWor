@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
-using Nolan.WebApi.Shared.Log;
+//using Nolan.WebApi.Shared.Log;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
