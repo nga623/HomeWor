@@ -19,7 +19,6 @@ namespace Nolan.WebApi.Shared.Extensions
                 {
                     return null;
                 }
-
                 return new CureetUser() { Name = name.Value, UserTypeEnum = UserTypeEnum.Value };
             }
             catch

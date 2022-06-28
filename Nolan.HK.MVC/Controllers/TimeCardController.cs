@@ -46,6 +46,7 @@ namespace Nolan.HK.MVC.Controllers
             _IHttpContextAccessor = httpContextAccessor;
             _User = user;
         }
+
         public IActionResult Intail()
         {
             return View();
@@ -61,22 +62,22 @@ namespace Nolan.HK.MVC.Controllers
             return Json(null);
         }
 
-        public    IActionResult Index()
+        public IActionResult Index()
         {
             if (UserName != null)
             {
                 TimeSheetSearchDto timeSheetSearchDto = new TimeSheetSearchDto();
                 timeSheetSearchDto.User = UserName;
                 timeSheetSearchDto.UserType = Convert.ToInt32(UserType);
-                var list = _TimeSheetService.GetListAsync(timeSheetSearchDto).Result;
+                var listTimeSheet = _TimeSheetService.GetListAsync(timeSheetSearchDto).Result;
                 var projectList = _Project.Where(p => p.ProjectName != "").ToList();
-                var selectItemList = new List<SelectListItem>();
+                var selectPrjectList = new List<SelectListItem>();
                 var selectList = new SelectList(projectList, "Id", "ProjectName");
-                selectItemList.AddRange(selectList);
-                ViewBag.database = selectItemList;
+                selectPrjectList.AddRange(selectList);
+                ViewBag.database = selectPrjectList;
                 ViewBag.UserType = UserType;
                 ViewBag.UserName = UserName;
-                return View(list.ToList());
+                return View(listTimeSheet.ToList());
             }
             else
             {
