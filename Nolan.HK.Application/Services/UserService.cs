@@ -50,7 +50,7 @@ namespace Nolan.HK.Application.Services
             var returnDto = Mapper.Map<UserDto>(user);
             if (returnDto != null)
             {
-                Task<string> task =   new Task<string>(() => GetToken(returnDto));
+                Task<string> task = new Task<string>(() => GetToken(returnDto));
                 task.Start();
                 return await task;
             }
@@ -64,9 +64,9 @@ namespace Nolan.HK.Application.Services
         {
             var claims = new Claim[]
             {
-    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-    new Claim("name", user.Name.ToString(), ClaimValueTypes.Integer32),
-    new Claim("UserTypeEnum", user.UserTypeEnum.ToString(),ClaimValueTypes.Integer32)
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim("name", user.Name.ToString(), ClaimValueTypes.Integer32),
+                    new Claim("UserTypeEnum", user.UserTypeEnum.ToString(),ClaimValueTypes.Integer32)
             };
             var _jwtSetting = new JwtSetting();
             _jwtSetting.SecurityKey = _settings.Value.SecurityKey;
@@ -75,7 +75,6 @@ namespace Nolan.HK.Application.Services
             var algorithm = SecurityAlgorithms.HmacSha256;
             var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSetting.SecurityKey));
             var signingCredentials = new SigningCredentials(secretKey, algorithm);
-
             var token = new JwtSecurityToken(
               issuer: _jwtSetting.Issuer,
               audience: _jwtSetting.Audience,
@@ -84,7 +83,6 @@ namespace Nolan.HK.Application.Services
               notBefore: DateTime.Now,
               expires: DateTime.Now.AddSeconds(10000000)
             );
-
             string jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
             return jwtToken;
         }

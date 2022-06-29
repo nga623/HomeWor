@@ -12,19 +12,10 @@ using System.Threading;
 
 namespace Nolan.HK.MVC
 {
-    public class ThreadPoolSettings
-    {
-        public int MinThreads { get; set; } = 300;
-        public int MinCompletionPortThreads { get; set; } = 300;
-        public int MaxThreads { get; set; } = 32767;
-        public int MaxCompletionPortThreads { get; set; } = 1000;
-    }
-    
     public class Program
     {
         public static void Main(string[] args)
         {
-            //CreateHostBuilder(args).Build().Run();
             var hostBuilder = CreateHostBuilder(args);
             var host = hostBuilder.Build();
             host.Run();
@@ -35,11 +26,13 @@ namespace Nolan.HK.MVC
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                }).UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                 .ConfigureServices(services =>
-                 {
-                     services.Add(ServiceDescriptor.Singleton(typeof(IServiceInfo), ServiceInfo.Create(Assembly.GetExecutingAssembly())));
-                 }).UseNLog() 
+                })
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .ConfigureServices(services =>
+                {
+                    services.Add(ServiceDescriptor.Singleton(typeof(IServiceInfo), ServiceInfo.Create(Assembly.GetExecutingAssembly())));
+                })
+                .UseNLog() 
                  ;
     }
 }
