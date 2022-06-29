@@ -59,7 +59,10 @@ namespace Nolan.HK.Application.Services
                 throw new Exception("username or password is wrong");
             }
         }
-
+        public async Task<bool> LoginTestAsync(UserDto input)
+        {
+           return  await _userEntity.AnyAsync(p => p.Name == input.Name && p.Password == input.Password);
+        }
         public string GetToken(UserDto user)
         {
             var claims = new Claim[]
