@@ -13,18 +13,19 @@ namespace Nolan.HK.Application.Services.Tests
     [TestClass()]
     public class UserServiceTests
     {
-        public readonly IUserService _userService;  
-        public UserServiceTests(IUserService userService)
+        public UserService _userService { get; set; }
+        public UserServiceTests()
         {
-            _userService = userService;
+
         }
         [TestMethod()]
         public void LoginAsyncTest()
         {
+
             UserDto userDto = new UserDto();
             userDto.Name = "admin";
             userDto.Name = "gl@123321";
-            Assert.Equals(true,   _userService.LoginTestAsync(userDto));
+            Assert.Equals(true, _userService.LoginTestAsync(userDto));
         }
     }
 }
