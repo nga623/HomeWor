@@ -22,15 +22,16 @@ namespace Nolan.HK.Application.Services
         public UserService
             (
                 IEfBasicRepository<User> userEntity
-              , IOptions<JwtSetting> settings
+            //  , IOptions<JwtSetting> settings
             )
         {
             _userEntity = userEntity;
-            _settings = settings;
+          //  _settings = settings;
         }
 
         public async Task<bool> CreateAsync(UserDto input)
         {
+             
             var user = Mapper.Map<User>(input);
             user.Id = Guid.NewGuid();
             var exitUser = _userEntity.Where(p => p.Name == input.Name).FirstOrDefault();
@@ -88,6 +89,11 @@ namespace Nolan.HK.Application.Services
             );
             string jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
             return jwtToken;
+        }
+
+        int IUserService.LoginTestAsync(UserDto input)
+        {
+            return 1;
         }
     }
 }

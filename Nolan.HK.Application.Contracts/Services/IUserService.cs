@@ -11,7 +11,7 @@ namespace Nolan.HK.Application.Contracts.Services
     {
         Task<bool> CreateAsync(UserDto input);
         Task<string> LoginAsync(UserDto input);
-        Task<bool> LoginTestAsync(UserDto input);
+         int  LoginTestAsync(UserDto input);
 
     }
 }

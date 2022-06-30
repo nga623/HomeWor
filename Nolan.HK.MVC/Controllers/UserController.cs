@@ -16,11 +16,11 @@ namespace Nolan.HK.MVC.Controllers
         public UserController
             (
               IUserService userService
-             , ILogger<UserController> logger
+             
             )
         {
             _UserService = userService;
-            _logger = logger;
+           
         }
 
         public ActionResult Index()
@@ -49,8 +49,8 @@ namespace Nolan.HK.MVC.Controllers
         [ApiResultFilter]
         public async Task<ActionResult<string>> Login([FromBody] UserDto userDto)
         {
-            _logger.LogError("this is error message");
-            _logger.LogInformation("this is info message");
+         //   _logger.LogError("this is error message");
+          //  _logger.LogInformation("this is info message");
             if (!ModelState.IsValid)
             {
                 return View(null);
@@ -58,5 +58,10 @@ namespace Nolan.HK.MVC.Controllers
             return await _UserService.LoginAsync(userDto);
         }
 
+        public    ActionResult<int>  LoginTestAsync([FromBody] UserDto userDto)
+        {
+            
+            return   _UserService.LoginTestAsync(userDto);
+        }
     }
 }

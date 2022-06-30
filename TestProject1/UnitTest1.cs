@@ -8,7 +8,7 @@ namespace TestProject1
         [SetUp]
         public void Setup()
         {
-            Mock<IUserService> mockObject = new Mock<IUserService>();
+            //Mock<IUserService> mockObject = new Mock<IUserService>();
         }
        
 
