@@ -13,6 +13,7 @@ namespace TestProject3
         // 定义mock的逻辑
         private IUSD_RMB_ExchangeRateFeed prvGetMockExchangeRateFeed()
         {
+             
             Mock<IUSD_RMB_ExchangeRateFeed> mockObject = new Mock<IUSD_RMB_ExchangeRateFeed>();
             mockObject.Setup(m => m.GetActualUSDValue()).Returns(500);
             return mockObject.Object;
